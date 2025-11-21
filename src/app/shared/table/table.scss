@@ -1,7 +1,6 @@
-.p-datatable-frozen-tbody {
-  font-weight: bold;
-}
-
-.p-datatable-scrollable .p-frozen-column {
-  font-weight: bold;
+:host ::ng-deep {
+  .p-button-sm,
+  .p-togglebutton-sm {
+    padding: 6px 8px;
+  }
 }

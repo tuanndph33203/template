@@ -1,9 +1,9 @@
 export interface ITableConfig {
-  id: string;
   label: string;
-  field?: string;
+  field: string;
 
   type?:
+    | 'index'
     | 'text'
     | 'number'
     | 'date'
@@ -13,46 +13,33 @@ export interface ITableConfig {
     | 'badge'
     | 'currency'
     | 'percent'
-    | 'custom';
+    | 'custom'
+    | 'action';
 
   visible?: boolean;
-
-  sortable?: boolean;
-  sortField?: string;
-
-  filterable?: boolean;
-  filterType?: 'text' | 'number' | 'date' | 'select';
-  filterOptions?: any[];
 
   width?: string;
   minWidth?: string;
   maxWidth?: string;
-  align?: 'left' | 'center' | 'right';
-  headerAlign?: 'left' | 'center' | 'right';
-
-  frozen?: boolean;
-  frozenAlign?: 'left' | 'right';
-
-  cssClass?: string;
-  headerClass?: string;
-  style?: { [key: string]: string };
 
   tooltip?: boolean;
   tooltipField?: string;
 
-  pipe?: string;
-  pipeFormat?: string;
-  pipeLocale?: string;
+  truncate?: number;
+  lineClamp?: 1 | 2 | 3 | 4 | 5;
 
-  responsive?: boolean;
-  hideOn?: 'mobile' | 'tablet' | 'desktop';
-  showOn?: 'mobile' | 'tablet' | 'desktop';
-
-  template?: string;
-  render?: (row: any) => string;
-
-  actions?: boolean;
-  actionButtons?: Array<'edit' | 'delete' | 'view' | string>;
+  actionButtons?: Array<{
+    label?: string;
+    action?: () => void;
+    icon?: string;
+    tooltipLabel?: string;
+    children?: Array<{
+      label: string;
+      action: () => void;
+      icon?: string;
+      tooltipLabel?: string;
+    }>;
+  }>;
 
   badgeColor?: string;
   badgeMap?: { [key: string]: string };
