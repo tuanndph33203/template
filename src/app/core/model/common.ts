@@ -33,14 +33,15 @@ export interface ITableConfig {
     action?: () => void;
     icon?: string;
     tooltipLabel?: string;
-    children?: Array<{
-      label: string;
-      action: () => void;
-      icon?: string;
-      tooltipLabel?: string;
-    }>;
+    children?: ITableAction[];
   }>;
 
   badgeColor?: string;
   badgeMap?: { [key: string]: string };
+}
+export interface ITableAction {
+  label: string;
+  action: () => void;
+  icon?: string;
+  tooltipLabel?: string;
 }

@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+
 @Component({
-  selector: 'app-root',
+  selector: 'app-site',
   imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.scss',
+  templateUrl: './site.html',
+  styleUrl: './site.scss',
 })
-export class App {
-  constructor() {}
-}
+export class Site {}

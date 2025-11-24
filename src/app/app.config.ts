@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  LOCALE_ID,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
@@ -22,5 +23,6 @@ export const appConfig: ApplicationConfig = {
         preset: Material,
       },
     }),
+    { provide: LOCALE_ID, useValue: 'vi-VN' },
   ],
 };
