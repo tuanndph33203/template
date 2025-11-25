@@ -3,10 +3,19 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./feature/auth/login/login').then((c) => c.Login),
+    children: [
+      {
+         path: '',
+        loadComponent: () => import('./feature/auth/login/login').then((c) => c.Login),
+      },
+        {
+         path: 'register',
+        loadComponent: () => import('./feature/auth/register/register').then((c) => c.Register),
+      }
+    ]
   },
   {
-    path: '',
+    path: 'dashboard',
     loadComponent: () => import('./feature/site/site').then((c) => c.Site),
     children: [
       {
