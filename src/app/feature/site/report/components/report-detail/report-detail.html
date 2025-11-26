@@ -1,0 +1,50 @@
+<div class="h-full overflow-y-auto">
+  <div class="w-full bg-white p-6 text-sm leading-relaxed border border-blue-300">
+    <div class="flex justify-between">
+      <div></div>
+
+      <div>
+        <div class="text-center font-bold text-xl">HÓA ĐƠN GIÁ TRỊ GIA TĂNG</div>
+        <div class="text-center">Ngày {{ detail()?.InvoiceDate }}</div>
+      </div>
+
+      <div class="text-right">
+        <p>Ký hiệu: IC25MYY</p>
+        <p>Số: {{ detail()?.InvoiceNumber }}</p>
+      </div>
+    </div>
+
+    <div class="border-b my-4"></div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="space-y-1">
+        <h4 class="text-xl font-bold">MISA</h4>
+
+        <p>Mã số thuế: {{ detail()?.MerchantInvoice?.TaxCode }}</p>
+        <p>Địa chỉ: {{ detail()?.MerchantInvoice?.Address }}</p>
+        <p>Điện thoại: {{ detail()?.MerchantInvoice?.PhoneNumber }}</p>
+        <p>Hình thức thanh toán: TM/CK</p>
+      </div>
+    </div>
+    <div class="border-b my-4"></div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="space-y-1">
+        <p>Tên đơn vị: {{ detail()?.BuyerInvoice?.BuyerLegalName }}</p>
+        <p>MST/CCCD người mua: {{ detail()?.BuyerInvoice?.BuyerIdNumber }}</p>
+        <p>Địa chỉ: {{ detail()?.BuyerInvoice?.BuyerAddress }}</p>
+        <p>Điện thoại: {{ detail()?.BuyerInvoice?.BuyerPhoneNumber }}</p>
+      </div>
+    </div>
+    <div class="mt-4">
+      <app-table-meta [dataTable]="items()" [columns]="colsTemp" />
+    </div>
+    <div class="flex gap-2 mt-4 font-semibold">
+      <div>Số tiền chiết khấu:</div>
+      <div>{{ totalDiscount() | number }}</div>
+    </div>
+    <app-table-meta [dataTable]="summaryTableData()" [columns]="summaryColsTemp" />
+    <p class="mt-4 italic">
+      Số tiền viết bằng chữ:
+      <strong>{{ totalInWords() | numberToVietnamese }} đồng</strong>
+    </p>
+  </div>
+</div>

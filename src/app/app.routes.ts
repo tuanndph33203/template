@@ -6,7 +6,7 @@ export const routes: Routes = [
     loadComponent: () => import('./feature/auth/login/login').then((c) => c.Login),
   },
   {
-    path: '',
+    path: 'dashboard',
     loadComponent: () => import('./feature/site/site').then((c) => c.Site),
     children: [
       {

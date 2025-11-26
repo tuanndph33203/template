@@ -1,3 +1,38 @@
-<div class="h-full bg-gray-50">
-    <app-table-meta [dataTable]="data" [columns]="colsTemp" [scrollHeight]="'calc(100vh - 16px)'" />
+<div class="h-full space-y-4">
+  <div class="bg-white px-4 py-1 rounded">
+    <h3 class="text-md font-bold underline mb-1">Lưu ý:</h3>
+    <ul class="list-decimal px-4 text-sm space-y-1">
+      <li>
+        Kế toán click phát hành hóa đơn ngày nào --> Hóa đơn sẽ được phát hành theo ngày hiện tại
+        (có thể không phải ngày chứng từ).
+      </li>
+      <li>
+        Kế toán cần xử lý các chứng từ ở trạng thái "Chuẩn bị phát hành" và "Chưa xử lý" kịp thời.
+      </li>
+      <li>Các trạng thái còn lại kế toán cũng cần kiểm tra để xử lý theo nghiệp vụ kế toán.</li>
+      <li>
+        Có những trường hợp hệ thống lỗi không thể xử lý. Kế toán cần kiểm tra hàng ngày để xử lý,
+        tự xuất hóa đơn,… đảm bảo việc xuất hóa đơn đúng, đủ, kịp thời...
+      </li>
+      <li>
+        Các giao dịch kế toán xác nhận không cần xuất hóa đơn theo quy định của pháp luật có trạng
+        thái "Không xuất HĐ". Nếu có trường hợp nào cần xuất thì kế toán xử lý thủ công.
+      </li>
+    </ul>
+  </div>
+  <input class="w-full h-[30px]" />
+  <div class="h-full">
+    <app-table-meta
+      [dataTable]="data()"
+      [columns]="colsTemp"
+      [scrollHeight]="'550px'"
+      [showColumnToggle]="true"
+      [showFrozen]="true"
+      [showTotalRecord]="true"
+      [virtualScroll]="true"
+      [totalData]="total()"
+      (actionClick)="handleAction($event)"
+      (actionLazyload)="onScroll($event)"
+    />
+  </div>
 </div>

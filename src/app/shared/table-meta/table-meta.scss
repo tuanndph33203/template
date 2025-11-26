@@ -1,8 +1,11 @@
 :host ::ng-deep {
   .p-datatable-tbody > tr > td {
+    height: 41px;
     padding: 6px;
+    white-space: nowrap;
   }
   .p-datatable-thead > tr > th {
+    min-height: 41px;
     padding: 6px;
   }
 }

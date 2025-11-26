@@ -26,9 +26,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/assets/styles.scss"
-            ]
+            "styles": ["src/assets/styles.scss"]
           },
           "configurations": {
             "production": {
@@ -44,6 +42,13 @@
                   "maximumError": "8kB"
                 }
               ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
               "outputHashing": "all"
             },
             "development": {
@@ -80,18 +85,13 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/assets/styles.scss"
-            ]
+            "styles": ["src/assets/styles.scss"]
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
@@ -99,8 +99,6 @@
   },
   "cli": {
     "analytics": "8a42b2d6-bd75-465b-8742-6ecb0f7c14e6",
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "schematicCollections": ["@angular-eslint/schematics"]
   }
 }

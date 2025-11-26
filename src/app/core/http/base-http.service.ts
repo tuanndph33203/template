@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class BaseHttpService {
   private http = inject(HttpClient);
-  private baseUrl = 'https://api.your-domain.com'; // TODO: đổi theo môi trường
+ private baseUrl = environment.apiUrl;
 
   get<T>(url: string, params?: Record<string, any>): Observable<T> {
     const httpParams = this.buildParams(params);

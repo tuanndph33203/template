@@ -185,6 +185,11 @@
   resolved "https://registry.yarnpkg.com/@angular-eslint/bundled-angular-compiler/-/bundled-angular-compiler-20.6.0.tgz#f006547068f771c4ccc0a85e512a42798ba5c9ee"
   integrity sha512-axeU33lBOcfQ/kcpBc/70vR69PFX9kqgUtroENK0lq6dBeRgi6LJVbBOAHRtR2Xfxd9Lv4YbqWuJ0oQ5BwSTGQ==
 
+"@angular-eslint/bundled-angular-compiler@20.7.0":
+  version "20.7.0"
+  resolved "https://registry.yarnpkg.com/@angular-eslint/bundled-angular-compiler/-/bundled-angular-compiler-20.7.0.tgz#1bf24d6167ed699e0a3bc40ea6d78f22bd8b1e10"
+  integrity sha512-9KPz24YoiL0SvTtTX6sd1zmysU5cKOCcmpEiXkCoO3L2oYZGlVxmMT4hfSaHMt8qmfvV2KzQMoR6DZM84BwRzQ==
+
 "@angular-eslint/eslint-plugin-template@20.6.0":
   version "20.6.0"
   resolved "https://registry.yarnpkg.com/@angular-eslint/eslint-plugin-template/-/eslint-plugin-template-20.6.0.tgz#65170d5e834c68739a284a761f03ced64627d8f7"
@@ -192,6 +197,16 @@
   dependencies:
     "@angular-eslint/bundled-angular-compiler" "20.6.0"
     "@angular-eslint/utils" "20.6.0"
+    aria-query "5.3.2"
+    axobject-query "4.1.0"
+
+"@angular-eslint/eslint-plugin-template@20.7.0":
+  version "20.7.0"
+  resolved "https://registry.yarnpkg.com/@angular-eslint/eslint-plugin-template/-/eslint-plugin-template-20.7.0.tgz#3a536cc31bb9b861b3663eee7b83d484517d2b4f"
+  integrity sha512-WFmvW2vBR6ExsSKEaActQTteyw6ikWyuJau9XmWEPFd+2eusEt/+wO21ybjDn3uc5FTp1IcdhfYy+U5OdDjH5w==
+  dependencies:
+    "@angular-eslint/bundled-angular-compiler" "20.7.0"
+    "@angular-eslint/utils" "20.7.0"
     aria-query "5.3.2"
     axobject-query "4.1.0"
 
@@ -204,15 +219,24 @@
     "@angular-eslint/utils" "20.6.0"
     ts-api-utils "^2.1.0"
 
-"@angular-eslint/schematics@20.6.0":
-  version "20.6.0"
-  resolved "https://registry.yarnpkg.com/@angular-eslint/schematics/-/schematics-20.6.0.tgz#b28119efa0f056ddca711963eaa47c3aeb219d2e"
-  integrity sha512-bZ3FFyfEUqnLkNj4OzU+0LQH4NiHtWbleuoaaTeIXAG9AHZP9H5PPD9loR3CUaLoHvwY22zWBkBOEuBBDkBAtw==
+"@angular-eslint/eslint-plugin@20.7.0":
+  version "20.7.0"
+  resolved "https://registry.yarnpkg.com/@angular-eslint/eslint-plugin/-/eslint-plugin-20.7.0.tgz#c28ad8b66513ebcef48db7b9cf6f994d665f62b4"
+  integrity sha512-aHH2YTiaonojsKN+y2z4IMugCwdsH/dYIjYBig6kfoSPyf9rGK4zx+gnNGq/pGRjF3bOYrmFgIviYpQVb80inQ==
+  dependencies:
+    "@angular-eslint/bundled-angular-compiler" "20.7.0"
+    "@angular-eslint/utils" "20.7.0"
+    ts-api-utils "^2.1.0"
+
+"@angular-eslint/schematics@20":
+  version "20.7.0"
+  resolved "https://registry.yarnpkg.com/@angular-eslint/schematics/-/schematics-20.7.0.tgz#610505927b0c088fcc08d7c1641fe2b90e00799c"
+  integrity sha512-S0onfRipDUIL6gFGTFjiWwUDhi42XYrBoi3kJ3wBbKBeIgYv9SP1ppTKDD4ZoDaDU9cQE8nToX7iPn9ifMw6eQ==
   dependencies:
     "@angular-devkit/core" ">= 20.0.0 < 21.0.0"
     "@angular-devkit/schematics" ">= 20.0.0 < 21.0.0"
-    "@angular-eslint/eslint-plugin" "20.6.0"
-    "@angular-eslint/eslint-plugin-template" "20.6.0"
+    "@angular-eslint/eslint-plugin" "20.7.0"
+    "@angular-eslint/eslint-plugin-template" "20.7.0"
     ignore "7.0.5"
     semver "7.7.3"
     strip-json-comments "3.1.1"
@@ -231,6 +255,13 @@
   integrity sha512-usjCCjbdtqy4p8I3BMPn6LrXECFLCohBa75h59PK0kV/TEb8OlnIWIWTVtZAMw/MgohtExl69GkSNmL3ElWbUQ==
   dependencies:
     "@angular-eslint/bundled-angular-compiler" "20.6.0"
+
+"@angular-eslint/utils@20.7.0":
+  version "20.7.0"
+  resolved "https://registry.yarnpkg.com/@angular-eslint/utils/-/utils-20.7.0.tgz#e0541034e2529c78ab9628a8bdc3f96d418f15a7"
+  integrity sha512-B6EJHbsk2W/lnS3kS/gm56VGvX735419z/DzgbRDcOvqMGMLwD1ILzv5OTEcL1rzpnB0AHW+IxOu6y/aCzSNUA==
+  dependencies:
+    "@angular-eslint/bundled-angular-compiler" "20.7.0"
 
 "@angular/animations@^21.0.0":
   version "21.0.0"
@@ -272,6 +303,14 @@
     watchpack "2.4.4"
   optionalDependencies:
     lmdb "3.4.2"
+
+"@angular/cdk@^21.0.0":
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-21.0.0.tgz#2188e656221d36b5c4d8299f283b69efd776733c"
+  integrity sha512-wCr5D3mEC+p69IMDC7vf8bWx18mfUNNRdsiK3XD0m1PqfeNfnCJb+Bnkks37MC/SU01uCNrAokRaTbWL6pk1Wg==
+  dependencies:
+    parse5 "^8.0.0"
+    tslib "^2.3.0"
 
 "@angular/cli@^20.3.5":
   version "20.3.11"
