@@ -1,17 +1,17 @@
 export interface IInvoiceQuery {
-  startDate?: string;
-  endDate?: string;
+  startDate?: string | null;
+  endDate?: string | null;
+  merchantId?: string | null;
+  documentNumber?: string | null;
+  invNo?: string | null;
+  customerTax?: string | null;
+  customerName?: string | null;
+  customerPhone?: string | null;
+  status?: number | null;
+  note?: string | null;
+  paymentType?: string | null;
   page: number;
   size: number;
-  merchantId?: string;
-  documentNumber?: string;
-  invNo?: string;
-  customerTax?: string;
-  customerName?: string;
-  customerPhone?: string;
-  status?: number;
-  note?: string;
-  paymentType?: string;
 }
 
 export interface IInvoice {
@@ -90,11 +90,13 @@ export interface ITaxRate {
   InvoiceId: string;
   VatRateName: string;
   AmountWithoutVATOC: number;
-  VatAmountOC: number;
+  VATAmountOC: number;
 }
 
 export interface IInvoiceDetail {
   RefId: string;
+  IsHaveInoiveFile: boolean;
+  UrlFileInvoice: string;
   MerchantInvoice: IMerchantInvoice;
   BuyerInvoice: IBuyerInvoice;
   ListInvoiceItems: IInvoiceItem[];

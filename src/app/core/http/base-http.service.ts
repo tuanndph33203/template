@@ -6,7 +6,7 @@ import { environment } from '@env/environment';
 @Injectable({ providedIn: 'root' })
 export class BaseHttpService {
   private http = inject(HttpClient);
- private baseUrl = environment.apiUrl;
+  private baseUrl = environment.apiUrl;
 
   get<T>(url: string, params?: Record<string, any>): Observable<T> {
     const httpParams = this.buildParams(params);

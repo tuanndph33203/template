@@ -4,23 +4,24 @@ export interface AuthUser {
   id: number;
   email: string;
   name: string;
-  roles: string[];
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private _user = signal<AuthUser | null>(null);
-  private _accessToken = signal<string | null>(null);
+  private _accessToken = signal<string | null>(localStorage.getItem('authToken'));
   private _loading = signal<boolean>(false);
 
   user = computed(() => this._user());
   isAuthenticated = computed(() => !!this._accessToken());
-  roles = computed(() => this._user()?.roles ?? []);
   loading = computed(() => this._loading());
 
-  setAuth(user: AuthUser, token: string) {
-    this._user.set(user);
+  setAuth(token: string | null) {
+    // this._user.set(user);
     this._accessToken.set(token);
+
+    if (token) localStorage.setItem('authToken', token);
+    else localStorage.removeItem('authToken');
   }
 
   setLoading(value: boolean) {
@@ -28,8 +29,7 @@ export class AuthStore {
   }
 
   clear() {
-    this._user.set(null);
-    this._accessToken.set(null);
+    this.setAuth(null);
   }
 
   getToken(): string | null {

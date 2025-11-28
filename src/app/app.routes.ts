@@ -3,7 +3,17 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./feature/auth/login/login').then((c) => c.Login),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./feature/auth/login/login').then((c) => c.Login),
+      },
+      {
+        path: 'login-callback',
+        loadComponent: () =>
+          import('./feature/auth/login-callback/login-callback').then((c) => c.LoginCallback),
+      },
+    ],
   },
   {
     path: 'dashboard',
@@ -14,5 +24,9 @@ export const routes: Routes = [
         loadComponent: () => import('./feature/site/report/report').then((c) => c.Report),
       },
     ],
+  },
+  {
+    path: 'access',
+    loadComponent: () => import('./feature/auth/access/access').then((c) => c.Access),
   },
 ];

@@ -8,6 +8,8 @@ import { ITableConfig } from '@app/core/model/common';
 import { ReportService } from '../../service/report';
 import { IInvoiceDetail, IInvoiceItem, ITaxRate } from '@app/core/model/invoice';
 import { NumberToVietnamesePipe } from '@app/core/pipe/number-to-vietnamese-pipe';
+import { finalize } from 'rxjs';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-report-detail',
@@ -19,9 +21,16 @@ import { NumberToVietnamesePipe } from '@app/core/pipe/number-to-vietnamese-pipe
 export class ReportDetail implements OnInit {
   colsTemp: ITableConfig[] = [
     { label: 'STT', field: 'index', type: 'index', align: 'center' },
-    { label: 'Tên hàng hóa, dịch vụ', field: 'ItemName', type: 'text' },
-    { label: 'Vé', field: '', type: 'text', align: 'right', minWidth: '40px' },
-    { label: 'DVT', field: '', type: 'text', minWidth: '40px' },
+    {
+      label: 'Tên hàng hóa, dịch vụ',
+      field: 'ItemName',
+      type: 'text',
+      truncate: 25,
+      tooltip: true,
+      tooltipField: 'ItemName',
+    },
+    { label: 'Vé', field: 'UnitName', type: 'text', align: 'right', minWidth: '40px' },
+    { label: 'DVT', field: 'LineNumber', type: 'text', minWidth: '40px' },
     { label: 'Số lượng', field: 'Quantity', type: 'text', align: 'right' },
     { label: 'Đơn giá trước chiết khẩu', field: 'UnitPrice', type: 'currency', align: 'right' },
     { label: 'Tiền chiết khấu', field: 'DiscountAmountOC', type: 'currency', align: 'right' },
@@ -59,93 +68,114 @@ export class ReportDetail implements OnInit {
       align: 'right',
     },
   ];
-
+  loading = signal(true);
   detail = signal<IInvoiceDetail | null>(null);
   items = signal<IInvoiceItem[]>([]);
   totalDiscount = signal(0);
-  totalVat0 = signal(0);
-  vat10Amount = signal(0);
-  vat10Tax = signal(0);
-  vat10Total = signal(0);
   grandTotal = signal(0);
-  vat10Base = signal(0);
   totalInWords = signal(0);
+  showPDF = signal(false);
+  urlFileInvoice = signal<SafeResourceUrl>('');
   summaryTableData = signal<any[]>([]);
 
   config = inject(DynamicDialogConfig);
   service = inject(ReportService);
+  sanitizer = inject(DomSanitizer);
 
   ngOnInit(): void {
-    this.service.getDetailInvoice(this.config.data).subscribe((res) => {
-      if (res.Code === 200) {
-        const d: IInvoiceDetail = res.Data;
-        this.detail.set(d);
-        const listItem = d.ListInvoiceItems.map((item) => ({
-          ...item,
-          AmountVATOC: item.VatAmountOC + item.AmountWithoutVATOC,
-        }));
-        this.items.set(listItem || []);
-        this.totalDiscount.set(
-          d.ListInvoiceItems.reduce(
-            (sum: number, item: IInvoiceItem) => sum + (item.DiscountAmountOC ?? 0),
-            0,
-          ),
-        );
+    this.service
+      .getDetailInvoice(this.config.data)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe((res) => {
+        if (res.Code === 200) {
+          if (res.Data.IsHaveInoiveFile) {
+            this.showPDF.set(true);
+            this.urlFileInvoice.set(
+              this.sanitizer.bypassSecurityTrustResourceUrl(res.Data.UrlFileInvoice) ?? '',
+            );
+            return;
+          }
 
-        this.totalVat0.set(
-          d.ListInvoiceItems.filter((item: IInvoiceItem) => item.VatRateName === '0%').reduce(
-            (sum: number, item: IInvoiceItem) => sum + (item.AmountWithoutVATOC ?? 0),
-            0,
-          ),
-        );
-        const vat10: ITaxRate | undefined = d.ListTaxRates.find(
-          (x: ITaxRate) => x.VatRateName === '10%',
-        );
+          const d: IInvoiceDetail = res.Data;
+          this.detail.set(d);
 
-        this.vat10Amount.set(vat10?.VatAmountOC ?? 0);
+          const listItem = d.ListInvoiceItems.map((item) => ({
+            ...item,
+            AmountVATOC: (item.VatAmountOC ?? 0) + (item.AmountWithoutVATOC ?? 0),
+          }));
+          this.items.set(listItem || []);
 
-        this.vat10Total.set((vat10?.AmountWithoutVATOC ?? 0) + (vat10?.VatAmountOC ?? 0));
+          // Tổng chiết khấu
+          this.totalDiscount.set(
+            d.ListInvoiceItems.reduce(
+              (sum: number, item: IInvoiceItem) => sum + (item.DiscountAmountOC ?? 0),
+              0,
+            ),
+          );
 
-        this.grandTotal.set(
-          d.ListInvoiceItems.reduce(
-            (sum: number, item: IInvoiceItem) => sum + (item.AmountOC ?? 0),
-            0,
-          ),
-        );
-        const total = d.ListInvoiceItems.reduce(
-          (s: number, i: IInvoiceItem) => s + (i.AmountOC ?? 0),
-          0,
-        );
-        this.grandTotal.set(total);
-        this.totalInWords.set(total);
-        this.summaryTableData.set([
-          {
-            title: 'Không kê khai thuế GTGT:',
-            AmountWithoutVATOC: null,
-            VatAmountOC: null,
-            TotalPayment: null,
-          },
-          {
-            title: 'Không chịu thuế GTGT:',
-            AmountWithoutVATOC: this.totalVat0(),
-            VatAmountOC: null,
-            TotalPayment: this.totalVat0(),
-          },
-          ...d.ListTaxRates.map((x) => ({
-            title: `Thuế suất ${x.VatRateName}:`,
-            AmountWithoutVATOC: x.AmountWithoutVATOC,
-            VatAmountOC: x.VatAmountOC,
-            TotalPayment: x.AmountWithoutVATOC + x.VatAmountOC,
-          })),
-          {
-            title: 'Tổng cộng:',
-            AmountWithoutVATOC: null,
-            VatAmountOC: null,
-            TotalPayment: this.grandTotal(),
-            bold: true,
-          },
-        ]);
-      }
-    });
+          this.buildSummaryTable(d);
+        }
+      });
+  }
+  private buildSummaryTable(d: IInvoiceDetail): void {
+    const items = d.ListInvoiceItems ?? [];
+    const taxRates = d.ListTaxRates ?? [];
+
+    // 1. Không kê khai thuế GTGT (không có VatRateName)
+    const unDeclareVAT = items
+      .filter((i: IInvoiceItem) => !i.VatRateName || i.VatRateName === '')
+      .reduce((s, i) => s + (i.AmountWithoutVATOC ?? 0), 0);
+
+    // 2. Không chịu thuế GTGT (Thuế suất 0%)
+    const totalVat0 = items
+      .filter((i: IInvoiceItem) => i.VatRateName === '0%')
+      .reduce((s, i) => s + (i.AmountWithoutVATOC ?? 0), 0);
+
+    // 3. Tổng tiền trước thuế của các mức VAT > 0 (5%, 8%, 10%, ...)
+    const taxableWithoutVAT = taxRates.reduce((s, x) => s + (x.AmountWithoutVATOC ?? 0), 0);
+
+    // 4. Tổng VAT
+    const totalVAT = taxRates.reduce((s, x) => s + (x.VATAmountOC ?? 0), 0);
+
+    // 5. Tổng cộng trước thuế
+    const totalWithoutVAT = unDeclareVAT + totalVat0 + taxableWithoutVAT;
+
+    // 6. Tổng cộng thanh toán (gồm VAT)
+    const totalPayment = totalWithoutVAT + totalVAT;
+
+    // Cập nhật grandTotal + tiền bằng chữ theo tổng thanh toán cuối cùng
+    this.grandTotal.set(totalPayment);
+    this.totalInWords.set(totalPayment);
+
+    // 7. Build data cho bảng summary
+    const rows = [
+      {
+        title: 'Không kê khai thuế GTGT:',
+        AmountWithoutVATOC: unDeclareVAT,
+        VatAmountOC: 0,
+        TotalPayment: unDeclareVAT,
+      },
+      {
+        title: 'Không chịu thuế GTGT:',
+        AmountWithoutVATOC: totalVat0,
+        VatAmountOC: 0,
+        TotalPayment: totalVat0,
+      },
+      ...taxRates.map((x) => ({
+        title: `Thuế suất ${x.VatRateName}:`,
+        AmountWithoutVATOC: x.AmountWithoutVATOC,
+        VatAmountOC: x.VATAmountOC,
+        TotalPayment: x.AmountWithoutVATOC + x.VATAmountOC,
+      })),
+      {
+        title: 'Tổng cộng:',
+        AmountWithoutVATOC: totalWithoutVAT,
+        VatAmountOC: totalVAT,
+        TotalPayment: totalPayment,
+        bold: true,
+      },
+    ];
+
+    this.summaryTableData.set(rows);
   }
 }

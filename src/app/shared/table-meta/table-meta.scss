@@ -1,11 +1,21 @@
 :host ::ng-deep {
-  .p-datatable-tbody > tr > td {
-    height: 41px;
-    padding: 6px;
-    white-space: nowrap;
+  .p-datatable {
+    position: relative;
+    .p-datatable-tbody {
+      tr > td {
+        height: 41px;
+        padding: 6px;
+        white-space: nowrap;
+      }
+    }
+    .p-datatable-thead > tr > th {
+      min-height: 41px;
+      padding: 6px;
+    }
   }
-  .p-datatable-thead > tr > th {
-    min-height: 41px;
-    padding: 6px;
+}
+::ng-deep {
+  .p-tooltip {
+    font-size: 12px;
   }
 }

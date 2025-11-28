@@ -41,6 +41,8 @@ export class TableMeta implements OnInit {
   currentPage = input<number>(1);
   pageSize = input<number>(10);
 
+  showNodata = input<boolean>(false);
+  showLoading = input<boolean>(false);
   showTotalRecord = input<boolean>(false);
   virtualScroll = input<boolean>(false);
   showFrozen = input<boolean>(false);

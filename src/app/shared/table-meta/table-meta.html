@@ -1,4 +1,4 @@
-<div class="card space-y-4 text-sm">
+<div class="card space-y-4">
   <div class="flex justify-between gap-4">
     <div class="flex items-end">
       @if (showTotalRecord()) {
@@ -19,8 +19,8 @@
           offIcon="pi pi-lock-open"
           [onLabel]="'Thao Tác'"
           offLabel="Thao Tác"
-          (onChange)="actionFrozen.set(!actionFrozen())"
           size="small"
+          (onChange)="actionFrozen.set(!actionFrozen())"
         />
       }
       @if (actionsTable().length > 0) {
@@ -35,22 +35,21 @@
         </div>
       }
       @if (showColumnToggle()) {
-        <p-button
-          (click)="op.toggle($event)"
-          icon="pi pi-sliders-h"
-          label="Cột"
-          size="small"
-          class="!py-1"
-        />
+        <p-button (click)="op.toggle($event)" icon="pi pi-sliders-h" label="Cột" size="small" />
       }
     </div>
   </div>
 
   <p-table
-    [value]="dataTable() || []"
+    [scrollable]="true"
+    [value]="dataTable()"
+    [virtualScroll]="virtualScroll()"
+    [virtualScrollItemSize]="rowHeight()"
+    [scrollHeight]="scrollHeight()"
+    [loading]="showLoading()"
     stripedRows
     showGridlines
-    class="text-xs xl:text-sm bg-white"
+    class="bg-white"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -87,175 +86,179 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-      <cdk-virtual-scroll-viewport
-        (scrolledIndexChange)="onScroll($event)"
-        [itemSize]="41"
-        [ngStyle]="{ 'height.px': scrollHeight(), overflowY: 'auto' }"
-      >
-        <tr>
-          @if (showCheckboxToggle()) {
-            <td>
-              <p-checkbox
-                [binary]="true"
-                [ngModel]="selectedRows.includes(data)"
-                (onChange)="toggleRow(data, $event)"
-              ></p-checkbox>
-            </td>
-          }
+      <tr>
+        @if (showCheckboxToggle()) {
+          <td>
+            <p-checkbox
+              [binary]="true"
+              [ngModel]="selectedRows.includes(data)"
+              (onChange)="toggleRow(data, $event)"
+            ></p-checkbox>
+          </td>
+        }
 
-          @for (item of columns(); track $index) {
-            @if (!item.visible) {
-              @switch (item.type) {
-                @case ('index') {
-                  <td
-                    [style]="{
-                      minWidth: item.minWidth,
-                      maxWidth: item.maxWidth,
-                      width: item.width,
-                    }"
-                    [ngClass]="item.align ? '!text-' + item.align : '!text-left'"
-                  >
-                    <span>{{ getIndex(rowIndex) }}</span>
-                  </td>
-                }
-                @case ('text') {
-                  <td
-                    [style]="{
-                      minWidth: item.minWidth,
-                      maxWidth: item.maxWidth,
-                      width: item.width,
-                    }"
-                    pTooltip="{{ item.tooltip && data[item.tooltipField ?? ''] }}"
-                    [ngClass]="item.align ? '!text' + item.align : '!text-left'"
-                    tooltipPosition="top"
-                  >
-                    <span [ngClass]="item.lineClamp ? 'line-clamp-' + item.lineClamp : ''">{{
-                      data[item.field] | truncate: item.truncate
-                    }}</span>
-                  </td>
-                }
-                @case ('image') {
-                  <td
-                    [style]="{
-                      minWidth: item.minWidth,
-                      maxWidth: item.maxWidth,
-                      width: item.width,
-                    }"
-                  >
-                    <img
-                      [ngSrc]="data[item.field]"
-                      width="56"
-                      height="56"
-                      class="aspect-square object-cover object-center rounded"
-                      alt="item image"
-                      [style]="{ width: item.width }"
-                      priority
-                    />
-                  </td>
-                }
-                @case ('transform') {
-                  <td
-                    [style]="{
-                      minWidth: item.minWidth,
-                      maxWidth: item.maxWidth,
-                      width: item.width,
-                    }"
-                  >
-                    {{ item.transformFn ? item.transformFn(data[item.field]) : data[item.field] }}
-                  </td>
-                }
-                @case ('currency') {
-                  <td
-                    [style]="{
-                      minWidth: item.minWidth,
-                      maxWidth: item.maxWidth,
-                      width: item.width,
-                    }"
-                    [ngClass]="item.align ? '!text' + item.align : '!text-left'"
-                  >
-                    <span>{{ data[item.field] | currency: 'VND' }}</span>
-                  </td>
-                }
-                @case ('date') {
-                  <td
-                    [style]="{
-                      minWidth: item.minWidth,
-                      maxWidth: item.maxWidth,
-                      width: item.width,
-                    }"
-                    [ngClass]="item.align ? '!text' + item.align : '!text-left'"
-                  >
-                    <span>{{ data[item.field] | date: 'dd/MM/yyyy' }}</span>
-                  </td>
-                }
-                @case ('action') {
-                  <td
-                    pFrozenColumn
-                    [frozen]="actionFrozen()"
-                    [alignFrozen]="'right'"
-                    class="!px-4"
-                    [style]="{
-                      minWidth: item.minWidth,
-                      maxWidth: item.maxWidth,
-                      width: item.width,
-                    }"
-                    [ngClass]="actionFrozen() ? '!bg-blue-100' : ''"
-                  >
-                    <div class="flex gap-2">
-                      @for (btn of item.actionButtons; track $index) {
-                        <button
-                          [pTooltip]="btn.tooltipLabel ?? ''"
-                          severity="secondary"
-                          tooltipPosition="top"
-                          class="flex justify-center items-center gap-2 px-2 py-1 rounded bg-blue-500 text-white text-sm"
-                          (click)="
-                            btn.children ? toggleMenu($event, menu) : onActionClick(btn, data)
-                          "
-                        >
-                          @if (btn.icon) {
-                            <i class="{{ btn.icon }}"></i>
-                          }
-                          @if (btn.label) {
-                            <span class="w-fit">
-                              {{ btn.label }}
-                            </span>
-                          }
-                        </button>
-                        <p-popover #menu>
-                          @for (btnChild of btn.children; track $index) {
-                            <button
-                              [pTooltip]="btnChild.tooltipLabel ?? ''"
-                              severity="secondary"
-                              tooltipPosition="top"
-                              class="flex items-center justify-center gap-2 px-2 py-1 rounded bg-blue-600 text-white text-sm"
-                              (click)="onActionClick(btnChild, data)"
-                            >
-                              @if (btnChild.icon) {
-                                <i class=" {{ btnChild.icon }}"></i>
-                              }
-                              @if (btn.label) {
-                                <span class="w-fit">
-                                  {{ btn.label }}
-                                </span>
-                              }
-                            </button>
-                          }
-                        </p-popover>
-                      }
-                    </div>
-                  </td>
-                }
-                @default {
-                  <td [style]="{ minWidth: item.minWidth, maxWidth: item.maxWidth }">
-                    <span>{{ data[item.field] }}</span>
-                  </td>
-                }
+        @for (item of columns(); track $index) {
+          @if (!item.visible) {
+            @switch (item.type) {
+              @case ('index') {
+                <td
+                  [style]="{
+                    minWidth: item.minWidth,
+                    maxWidth: item.maxWidth,
+                    width: item.width,
+                  }"
+                  [ngClass]="item.align ? '!text-' + item.align : '!text-left'"
+                >
+                  <span>{{ getIndex(rowIndex) }}</span>
+                </td>
+              }
+              @case ('text') {
+                <td
+                  [style]="{
+                    minWidth: item.minWidth,
+                    maxWidth: item.maxWidth,
+                    width: item.width,
+                  }"
+                  pTooltip="{{ item.tooltip && data[item.tooltipField ?? ''] }}"
+                  [ngClass]="item.align ? '!text' + item.align : '!text-left'"
+                  tooltipPosition="top"
+                >
+                  <span [ngClass]="item.lineClamp ? 'line-clamp-' + item.lineClamp : ''">{{
+                    data[item.field] | truncate: item.truncate
+                  }}</span>
+                </td>
+              }
+              @case ('image') {
+                <td
+                  [style]="{
+                    minWidth: item.minWidth,
+                    maxWidth: item.maxWidth,
+                    width: item.width,
+                  }"
+                >
+                  <img
+                    [ngSrc]="data[item.field]"
+                    width="56"
+                    height="56"
+                    class="aspect-square object-cover object-center rounded"
+                    alt="item image"
+                    [style]="{ width: item.width }"
+                    priority
+                  />
+                </td>
+              }
+              @case ('transform') {
+                <td
+                  [style]="{
+                    minWidth: item.minWidth,
+                    maxWidth: item.maxWidth,
+                    width: item.width,
+                  }"
+                >
+                  {{ item.transformFn ? item.transformFn(data[item.field]) : data[item.field] }}
+                </td>
+              }
+              @case ('currency') {
+                <td
+                  [style]="{
+                    minWidth: item.minWidth,
+                    maxWidth: item.maxWidth,
+                    width: item.width,
+                  }"
+                  [ngClass]="item.align ? '!text' + item.align : '!text-left'"
+                >
+                  <span>{{ data[item.field] | currency: 'VND' }}</span>
+                </td>
+              }
+              @case ('date') {
+                <td
+                  [style]="{
+                    minWidth: item.minWidth,
+                    maxWidth: item.maxWidth,
+                    width: item.width,
+                  }"
+                  [ngClass]="item.align ? '!text' + item.align : '!text-left'"
+                >
+                  <span>{{ data[item.field] | date: 'dd/MM/yyyy' }}</span>
+                </td>
+              }
+              @case ('action') {
+                <td
+                  pFrozenColumn
+                  [frozen]="actionFrozen()"
+                  [alignFrozen]="'right'"
+                  class="!px-4"
+                  [style]="{
+                    minWidth: item.minWidth,
+                    maxWidth: item.maxWidth,
+                    width: item.width,
+                  }"
+                  [ngClass]="actionFrozen() ? '!bg-blue-100' : ''"
+                >
+                  <div class="flex gap-2">
+                    @for (btn of item.actionButtons; track $index) {
+                      <button
+                        [pTooltip]="btn.tooltipLabel ?? ''"
+                        severity="secondary"
+                        tooltipPosition="top"
+                        class="flex justify-center items-center gap-2 px-2 py-1 rounded bg-blue-500 text-white text-sm"
+                        (click)="btn.children ? toggleMenu($event, menu) : onActionClick(btn, data)"
+                      >
+                        @if (btn.icon) {
+                          <i class="{{ btn.icon }}"></i>
+                        }
+                        @if (btn.label) {
+                          <span class="w-fit">
+                            {{ btn.label }}
+                          </span>
+                        }
+                      </button>
+                      <p-popover #menu>
+                        @for (btnChild of btn.children; track $index) {
+                          <button
+                            [pTooltip]="btnChild.tooltipLabel ?? ''"
+                            severity="secondary"
+                            tooltipPosition="top"
+                            class="flex items-center justify-center gap-2 px-2 py-1 rounded bg-blue-600 text-white text-sm"
+                            (click)="onActionClick(btnChild, data)"
+                          >
+                            @if (btnChild.icon) {
+                              <i class=" {{ btnChild.icon }}"></i>
+                            }
+                            @if (btn.label) {
+                              <span class="w-fit">
+                                {{ btn.label }}
+                              </span>
+                            }
+                          </button>
+                        }
+                      </p-popover>
+                    }
+                  </div>
+                </td>
+              }
+              @default {
+                <td [style]="{ minWidth: item.minWidth, maxWidth: item.maxWidth }">
+                  <span>{{ data[item.field] }}</span>
+                </td>
               }
             }
           }
-        </tr>
-      </cdk-virtual-scroll-viewport>
+        }
+      </tr>
     </ng-template>
+
+    @if (showNodata()) {
+      <ng-template pTemplate="emptymessage">
+        <div class="h-96"></div>
+        <div
+          class="absolute top-1/2 right-1/2 translate-x-1/2 flex flex-col items-center justify-center text-gray-400 gap-2 text-lg"
+        >
+          <i class="pi pi-database text-xl" style="font-size: 2rem"></i>
+          Không có dữ liệu !
+        </div>
+      </ng-template>
+    }
   </p-table>
 </div>
 <p-popover #op>

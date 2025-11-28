@@ -50,6 +50,10 @@ export class ReportService {
     return this.http.get('/api/syncdata/get-detail-invoice', { refId });
   }
 
+  getMerchant(): Observable<ApiResponseDetail<any>> {
+    return this.http.get('/api/merchant/getall');
+  }
+
   publishInvoiceManual(refId: string): Observable<any> {
     return this.http.get('/api/syncdata/publish-invoice', { refId });
   }

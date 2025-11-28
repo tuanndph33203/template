@@ -1,0 +1,39 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+  <p-card styleClass="max-w-md text-center py-6 shadow-xl">
+    <div class="flex justify-center mb-4">
+      <p-avatar
+        icon="pi pi-lock"
+        styleClass="bg-red-100 text-red-500"
+        size="xlarge"
+        shape="circle"
+        style="width: 85px; height: 85px; font-size: 34px"
+      >
+      </p-avatar>
+    </div>
+
+    <h1 class="text-3xl font-bold text-gray-800 mt-2">Access Denied</h1>
+
+    <p class="text-gray-600 mt-3 leading-relaxed">
+      Bạn không có quyền truy cập trang này.<br />
+      Vui lòng đăng nhập tài khoản hợp lệ để tiếp tục.
+    </p>
+
+    <div class="flex justify-center gap-3 mt-8">
+      <p-button
+        label="Trang Chủ"
+        icon="pi pi-home"
+        styleClass="p-button-secondary"
+        (click)="redirect('/dashboard')"
+      >
+      </p-button>
+
+      <p-button
+        label="Đăng nhập lại"
+        icon="pi pi-sign-in"
+        (click)="redirect('/')"
+        styleClass="p-button-danger"
+      >
+      </p-button>
+    </div>
+  </p-card>
+</div>

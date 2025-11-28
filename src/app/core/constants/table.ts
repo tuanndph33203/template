@@ -44,7 +44,15 @@ export const TABLE_COLUMNS: ITableConfig[] = [
   },
 
   { label: 'Yêu cầu', field: 'Request', type: 'text', minWidth: '140px' },
-  { label: 'Ghi chú', field: 'Notes', type: 'text', minWidth: '160px', tooltip: true },
+  {
+    label: 'Ghi chú',
+    field: 'Notes',
+    type: 'text',
+    minWidth: '160px',
+    truncate: 50,
+    tooltip: true,
+    tooltipField: 'Notes',
+  },
 
   { label: 'Số HĐ', field: 'InvoiceNumber', type: 'text', minWidth: '140px' },
   { label: 'Ngày HĐ', field: 'InvoiceDate', type: 'text', minWidth: '150px' },

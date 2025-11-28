@@ -1,0 +1,24 @@
+:host ::ng-deep {
+  p-datepicker {
+    .p-datepicker-input {
+      padding: 3px 8px;
+      width: 100%;
+    }
+  }
+  p-select {
+    .p-select-label {
+      padding: 3px 8px;
+    }
+  }
+  .p-paginator {
+    background: none;
+  }
+  .p-paginator-page,
+  .p-paginator-next,
+  .p-paginator-last,
+  .p-paginator-first,
+  .p-paginator-prev {
+    min-width: 30px;
+    height: 30px;
+  }
+}
