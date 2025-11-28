@@ -1,59 +1,78 @@
 export interface ITableConfig {
-  id: string;
   label: string;
-  field?: string;
+  field: string;
 
-  type?:
-    | 'text'
-    | 'number'
-    | 'date'
-    | 'datetime'
-    | 'image'
-    | 'boolean'
-    | 'badge'
-    | 'currency'
-    | 'percent'
-    | 'custom';
+  type?: 'index' | 'text' | 'date' | 'image' | 'transform' | 'currency' | 'action';
+
+  align?: 'right' | 'left' | 'center';
 
   visible?: boolean;
 
-  sortable?: boolean;
-  sortField?: string;
-
-  filterable?: boolean;
-  filterType?: 'text' | 'number' | 'date' | 'select';
-  filterOptions?: any[];
+  transformFn?: (v: any) => any;
 
   width?: string;
   minWidth?: string;
   maxWidth?: string;
-  align?: 'left' | 'center' | 'right';
-  headerAlign?: 'left' | 'center' | 'right';
-
-  frozen?: boolean;
-  frozenAlign?: 'left' | 'right';
-
-  cssClass?: string;
-  headerClass?: string;
-  style?: { [key: string]: string };
 
   tooltip?: boolean;
   tooltipField?: string;
 
-  pipe?: string;
-  pipeFormat?: string;
-  pipeLocale?: string;
+  truncate?: number;
+  lineClamp?: 1 | 2 | 3 | 4 | 5;
 
-  responsive?: boolean;
-  hideOn?: 'mobile' | 'tablet' | 'desktop';
-  showOn?: 'mobile' | 'tablet' | 'desktop';
+  actionButtons?: Array<{
+    label?: string;
+    command?: () => void;
+    icon?: string;
+    type: string;
+    tooltipLabel?: string;
+    children?: ITableAction[];
+  }>;
+}
+export interface ITableAction {
+  label?: string;
+  command?: () => void;
+  icon?: string;
+  type: string;
+  tooltipLabel?: string;
+}
 
-  template?: string;
-  render?: (row: any) => string;
+export interface ApiResponse<T> {
+  Data: PageResponse<T>;
+  Code: number;
+  Message: string;
+  TotalTime: number;
+  DataCount: number | null;
+  Status: string | null;
+  TotalCount: number | null;
+}
+export interface ApiResponseDetail<T> {
+  Data: T;
+  Code: number;
+  Message: string;
+  TotalTime: number;
+  DataCount: number | null;
+  Status: string | null;
+  TotalCount: number | null;
+}
+export interface PageResponse<T> {
+  Page: number;
+  TotalPages: number;
+  Size: number;
+  NumberOfElements: number;
+  TotalElements: number;
+  Content: T;
+}
 
-  actions?: boolean;
-  actionButtons?: Array<'edit' | 'delete' | 'view' | string>;
+export interface ITableActionEvent<Row = any> {
+  action: ITableAction;
+  row: Row;
+}
 
-  badgeColor?: string;
-  badgeMap?: { [key: string]: string };
+export interface LazyLoadEventData {
+  first: number;
+  rows: number;
+  sortOrder?: 1 | -1 | 0; // tăng | giảm | none
+  filters?: Record<string, any>;
+  globalFilter?: string | null;
 }

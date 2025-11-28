@@ -1,0 +1,148 @@
+<div class="h-full space-y-4">
+  <div class="bg-white px-4 py-2 rounded-md">
+    <h3 class="font-bold underline mb-1">Lưu ý:</h3>
+    <ul class="list-decimal px-4 text-xs space-y-1">
+      <li>
+        Kế toán click phát hành hóa đơn ngày nào --> Hóa đơn sẽ được phát hành theo ngày hiện tại
+        (có thể không phải ngày chứng từ).
+      </li>
+      <li>
+        Kế toán cần xử lý các chứng từ ở trạng thái "Chuẩn bị phát hành" và "Chưa xử lý" kịp thời.
+      </li>
+      <li>Các trạng thái còn lại kế toán cũng cần kiểm tra để xử lý theo nghiệp vụ kế toán.</li>
+      <li>
+        Có những trường hợp hệ thống lỗi không thể xử lý. Kế toán cần kiểm tra hàng ngày để xử lý,
+        tự xuất hóa đơn,… đảm bảo việc xuất hóa đơn đúng, đủ, kịp thời...
+      </li>
+      <li>
+        Các giao dịch kế toán xác nhận không cần xuất hóa đơn theo quy định của pháp luật có trạng
+        thái "Không xuất HĐ". Nếu có trường hợp nào cần xuất thì kế toán xử lý thủ công.
+      </li>
+    </ul>
+  </div>
+  <div class="table-warp bg-slate-50 px-4 pt-1 rounded-md">
+    <form [formGroup]="formSearch" class="grid grid-cols-6 gap-4 py-2">
+      <input
+        pInputText
+        type="text"
+        class="w-full h-[30px]"
+        placeholder="Nhập mã số thuế"
+        formControlName="customerTax"
+      />
+      <input
+        pInputText
+        type="text"
+        class="w-full h-[30px]"
+        placeholder="Nhập tên khách hàng"
+        formControlName="customerName"
+      />
+      <input
+        pInputText
+        type="text"
+        class="w-full h-[30px]"
+        placeholder="Nhập số điện thoại"
+        formControlName="customerPhone"
+      />
+      <input
+        pInputText
+        type="text"
+        class="w-full h-[30px]"
+        placeholder="Nhập số hóa đơn"
+        formControlName="invNo"
+      />
+      <input
+        pInputText
+        type="text"
+        class="w-full h-[30px]"
+        placeholder="Nhập chứng từ"
+        formControlName="documentNumber"
+      />
+      <input
+        pInputText
+        type="text"
+        class="w-full h-[30px]"
+        placeholder="Nhập mô tả"
+        formControlName="note"
+      />
+      <p-datepicker
+        class="!p-0"
+        [showIcon]="true"
+        placeholder="Từ ngày"
+        formControlName="startDate"
+        showClear="true"
+      />
+      <p-datepicker
+        class="!p-0"
+        [showIcon]="true"
+        placeholder="Đến ngày"
+        formControlName="endDate"
+        showClear="true"
+      />
+      <p-select
+        [options]="branchOptions()"
+        optionLabel="Notes"
+        optionValue="Id"
+        placeholder="Chọn chi nhánh"
+        class="w-full"
+        formControlName="merchantId"
+        showClear="true"
+      />
+      <p-select
+        [options]="statusOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Chọn trạng thái"
+        class="w-full"
+        formControlName="status"
+        showClear="true"
+        clearicon=""
+      />
+      <p-select
+        [options]="paymentTypeOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Chọn loại giao dịch"
+        class="w-full"
+        formControlName="paymentType"
+        showClear="true"
+      />
+      <p-select
+        [options]="processTypeOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Chọn loại yêu cầu"
+        class="w-full"
+        formControlName="requestType"
+        showClear="true"
+      />
+    </form>
+    <div class="h-full text-sm">
+      <app-table-meta
+        [dataTable]="data()"
+        [columns]="colsTemp"
+        [scrollHeight]="'550px'"
+        [showFrozen]="true"
+        [showNodata]="true"
+        [showColumnToggle]="true"
+        [showTotalRecord]="true"
+        [showLoading]="loading()"
+        [totalData]="total()"
+        (actionClick)="handleAction($event)"
+        (actionLazyload)="onScroll($event)"
+      />
+      <div class="flex items-center justify-center">
+        <p-paginator
+          (onPageChange)="onPageChange($event)"
+          [first]="(searchQuery().page - 1) * searchQuery().size"
+          [rows]="searchQuery().size"
+          [totalRecords]="total()"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast
+  [showTransformOptions]="'translateY(100%)'"
+  [showTransitionOptions]="'300ms'"
+  [hideTransitionOptions]="'300ms'"
+></p-toast>
