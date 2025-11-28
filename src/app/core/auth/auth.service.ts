@@ -1,20 +1,22 @@
 import { inject, Injectable } from '@angular/core';
-import { BaseHttpService } from '../http/base-http.service';
 import { AuthStore } from './auth.store';
 import { tap, finalize, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(BaseHttpService);
   private authStore = inject(AuthStore);
+  private httpClient = inject(HttpClient);
 
   loginBySectionId(sessionId: string): Observable<any> {
     this.authStore.setLoading(true);
-    return this.http.get(`/authentication/issue-token?sectionId=${sessionId}`).pipe(
-      tap((res: any) => {
-        this.authStore.setAuth(res.data);
-      }),
-      finalize(() => this.authStore.setLoading(false)),
-    );
+    return this.httpClient
+      .get(`https://authentsv.trananh.org/api/authentication/issue-token?sectionId=${sessionId}`)
+      .pipe(
+        tap((res: any) => {
+          this.authStore.setAuth(res.data);
+        }),
+        finalize(() => this.authStore.setLoading(false)),
+      );
   }
 
   redirectMicrosoft() {

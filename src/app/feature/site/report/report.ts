@@ -17,7 +17,6 @@ import {
 } from '@app/core/constants/invoice';
 import { InputTextModule } from 'primeng/inputtext';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
-import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 @Component({
   selector: 'app-report',
@@ -32,7 +31,7 @@ import { Toast } from 'primeng/toast';
   ],
   templateUrl: './report.html',
   styleUrl: './report.scss',
-  providers: [DialogService, MessageService],
+  providers: [DialogService],
 })
 export class Report implements OnInit {
   colsTemp = TABLE_COLUMNS;
@@ -70,7 +69,6 @@ export class Report implements OnInit {
 
   report = inject(ReportService);
   dialogService = inject(DialogService);
-  private messageService = inject(MessageService);
 
   constructor() {
     effect(() => {
@@ -130,18 +128,20 @@ export class Report implements OnInit {
         closable: true,
       });
     }
-    this.messageService.add({
-      severity: 'warning',
-      summary: 'Không thể đăng nhập!',
-      detail: 'Vui lòng thử lại sau',
-    });
-    return;
-    // if (data.action.type === 'export') {
-    //   const a = document.createElement(row.);
-    //   a.href = url;
-    //   a.download = 'document.pdf'; // ← tuỳ đổi tên
-    //   a.click();
-    // }
+    if (data.action.type === 'publish') {
+    }
+    if (data.action.type === 'download') {
+      const url =
+        'https://test.meinvoice.vn/download/tra-cuu/downloadhandler.ashx?type=pdf&code=72c018ea-a0cc-44d1-8c78-72254a5f489e&Viewer=0&SearchType=2';
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.setAttribute('download', 'hoadon.pdf');
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
   }
 
   onPageChange(event: PaginatorState) {

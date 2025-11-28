@@ -11,7 +11,6 @@ import { providePrimeNG } from 'primeng/config';
 import Material from '@primeuix/themes/material';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth';
-import { MessageService } from 'primeng/api';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),
@@ -25,6 +24,5 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     { provide: LOCALE_ID, useValue: 'vi-VN' },
-    MessageService,
   ],
 };

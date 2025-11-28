@@ -29,4 +29,8 @@ export const routes: Routes = [
     path: 'access',
     loadComponent: () => import('./feature/auth/access/access').then((c) => c.Access),
   },
+  {
+    path: 'error',
+    loadComponent: () => import('./feature/auth/error/error').then((c) => c.Error),
+  },
 ];

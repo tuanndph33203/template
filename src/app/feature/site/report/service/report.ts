@@ -12,49 +12,49 @@ export class ReportService {
 
   // =============== APPLICATION ===============
   createApp(body: any): Observable<any> {
-    return this.http.post('/api/application/create', body);
+    return this.http.post('/application/create', body);
   }
 
   getAppKey(appId: string) {
-    return this.http.get('/api/application/get-key', { AppId: appId });
+    return this.http.get('/application/get-key', { AppId: appId });
   }
 
   // =============== MERCHANT ===============
   createMerchant(body: any) {
-    return this.http.post('/api/merchant', body);
+    return this.http.post('/merchant', body);
   }
 
   setupMerchantVat(body: any) {
-    return this.http.post('/api/merchant/setup-vat', body);
+    return this.http.post('/merchant/setup-vat', body);
   }
 
   setupInvSeri(body: any): Observable<any> {
-    return this.http.post('/api/merchant/setup-invseri', body);
+    return this.http.post('/merchant/setup-invseri', body);
   }
 
   // =============== VAT CONFIG ===============
   createVat(body: any): Observable<any> {
-    return this.http.post('/api/vatconfig', body);
+    return this.http.post('/vatconfig', body);
   }
 
   // =============== INVOICE ===============
   publishInvoice(body: any): Observable<any> {
-    return this.http.post('/api/syncdata', body);
+    return this.http.post('/syncdata', body);
   }
 
   searchInvoice(params: any): Observable<ApiResponse<IInvoice[]>> {
-    return this.http.post('/api/syncdata/getby-filter', params);
+    return this.http.post('/syncdata/getby-filter', params);
   }
 
   getDetailInvoice(refId: string): Observable<ApiResponseDetail<IInvoiceDetail>> {
-    return this.http.get('/api/syncdata/get-detail-invoice', { refId });
+    return this.http.get('/syncdata/get-detail-invoice', { refId });
   }
 
   getMerchant(): Observable<ApiResponseDetail<any>> {
-    return this.http.get('/api/merchant/getall');
+    return this.http.get('/merchant/getall');
   }
 
   publishInvoiceManual(refId: string): Observable<any> {
-    return this.http.get('/api/syncdata/publish-invoice', { refId });
+    return this.http.get('/syncdata/publish-invoice', { refId });
   }
 }
