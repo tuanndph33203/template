@@ -24,7 +24,7 @@ export class LoginCallback implements OnInit {
         },
         () => {
           this.messageService.add({
-            severity: 'warning',
+            severity: 'info',
             summary: 'Không thể đăng nhập!',
             detail: 'Vui lòng thử lại sau',
           });
@@ -33,7 +33,7 @@ export class LoginCallback implements OnInit {
       );
     } else {
       console.warn('Không tìm thấy token từ callback');
-      this.router.navigate(['/']);
+      this.router.navigate(['/error']);
     }
   }
 }

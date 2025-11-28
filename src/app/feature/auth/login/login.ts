@@ -1,10 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '@app/core/auth/auth.service';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
