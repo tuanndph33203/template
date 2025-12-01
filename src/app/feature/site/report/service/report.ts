@@ -10,36 +10,8 @@ import { Observable } from 'rxjs';
 export class ReportService {
   private http = inject(BaseHttpService);
 
-  // =============== APPLICATION ===============
-  createApp(body: any): Observable<any> {
-    return this.http.post('/application/create', body);
-  }
-
-  getAppKey(appId: string) {
-    return this.http.get('/application/get-key', { AppId: appId });
-  }
-
-  // =============== MERCHANT ===============
-  createMerchant(body: any) {
-    return this.http.post('/merchant', body);
-  }
-
-  setupMerchantVat(body: any) {
-    return this.http.post('/merchant/setup-vat', body);
-  }
-
-  setupInvSeri(body: any): Observable<any> {
-    return this.http.post('/merchant/setup-invseri', body);
-  }
-
-  // =============== VAT CONFIG ===============
-  createVat(body: any): Observable<any> {
-    return this.http.post('/vatconfig', body);
-  }
-
-  // =============== INVOICE ===============
-  publishInvoice(body: any): Observable<any> {
-    return this.http.post('/syncdata', body);
+  publishInvoice(refId: string): Observable<any> {
+    return this.http.get('/syncdata/publish-invoice?refId=' + refId);
   }
 
   searchInvoice(params: any): Observable<ApiResponse<IInvoice[]>> {

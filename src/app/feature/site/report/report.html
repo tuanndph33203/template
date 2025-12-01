@@ -22,99 +22,109 @@
   </div>
   <div class="table-warp bg-slate-50 px-4 pt-1 rounded-md">
     <form [formGroup]="formSearch" class="grid grid-cols-6 gap-4 py-2">
-      <input
-        pInputText
-        type="text"
-        class="w-full h-[30px]"
-        placeholder="Nhập mã số thuế"
-        formControlName="customerTax"
-      />
-      <input
-        pInputText
-        type="text"
-        class="w-full h-[30px]"
-        placeholder="Nhập tên khách hàng"
-        formControlName="customerName"
-      />
-      <input
-        pInputText
-        type="text"
-        class="w-full h-[30px]"
-        placeholder="Nhập số điện thoại"
-        formControlName="customerPhone"
-      />
-      <input
-        pInputText
-        type="text"
-        class="w-full h-[30px]"
-        placeholder="Nhập số hóa đơn"
-        formControlName="invNo"
-      />
-      <input
-        pInputText
-        type="text"
-        class="w-full h-[30px]"
-        placeholder="Nhập chứng từ"
-        formControlName="documentNumber"
-      />
-      <input
-        pInputText
-        type="text"
-        class="w-full h-[30px]"
-        placeholder="Nhập mô tả"
-        formControlName="note"
-      />
-      <p-datepicker
-        class="!p-0"
-        [showIcon]="true"
-        placeholder="Từ ngày"
-        formControlName="startDate"
-        showClear="true"
-      />
-      <p-datepicker
-        class="!p-0"
-        [showIcon]="true"
-        placeholder="Đến ngày"
-        formControlName="endDate"
-        showClear="true"
-      />
-      <p-select
-        [options]="branchOptions()"
-        optionLabel="Notes"
-        optionValue="Id"
-        placeholder="Chọn chi nhánh"
-        class="w-full"
-        formControlName="merchantId"
-        showClear="true"
-      />
-      <p-select
-        [options]="statusOptions"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="Chọn trạng thái"
-        class="w-full"
-        formControlName="status"
-        showClear="true"
-        clearicon=""
-      />
-      <p-select
-        [options]="paymentTypeOptions"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="Chọn loại giao dịch"
-        class="w-full"
-        formControlName="paymentType"
-        showClear="true"
-      />
-      <p-select
-        [options]="processTypeOptions"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="Chọn loại yêu cầu"
-        class="w-full"
-        formControlName="requestType"
-        showClear="true"
-      />
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="customerTax"
+          type="text"
+          class="w-full h-[35px]"
+          formControlName="customerTax"
+        />
+        <label for="customerTax" class="!font-normal text-sm">Nhập mã số thuế</label>
+      </p-floatlabel>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" class="w-full h-[35px]" formControlName="customerName" />
+        <label for="customerName" class="!font-normal text-sm">Nhập tên khách hàng</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <input pInputText type="text" class="w-full h-[35px]" formControlName="customerPhone" />
+        <label for="customerPhone" class="!font-normal text-sm">Nhập số điện thoại</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <input pInputText type="text" class="w-full h-[35px]" formControlName="invNo" />
+        <label for="invNo" class="!font-normal text-sm">Nhập số hóa đơn</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <input pInputText type="text" class="w-full h-[35px]" formControlName="documentNumber" />
+        <label for="documentNumber" class="!font-normal text-sm">Nhập chứng từ</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <input pInputText type="text" class="w-full h-[35px]" formControlName="note" />
+        <label for="note" class="!font-normal text-sm">Nhập mô tả</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <p-datepicker
+          class="!p-0 h-[35px]"
+          [showIcon]="true"
+          formControlName="startDate"
+          showClear="true"
+        />
+        <label for="startDate" class="!font-normal text-sm">Từ ngày</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <p-datepicker
+          class="!p-0 h-[35px]"
+          [showIcon]="true"
+          formControlName="endDate"
+          showClear="true"
+        />
+        <label for="endDate" class="!font-normal text-sm">Đến ngày</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <p-select
+          [options]="branchOptions()"
+          optionLabel="Notes"
+          optionValue="Id"
+          class="w-full h-[35px]"
+          formControlName="merchantId"
+          showClear="true"
+        />
+        <label for="merchantId" class="!font-normal text-sm">Chọn chi nhánh</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <p-select
+          [options]="statusOptions"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full h-[35px]"
+          formControlName="status"
+          showClear="true"
+          clearicon=""
+        />
+        <label for="status" class="!font-normal text-sm">Chọn trạng thái</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <p-select
+          [options]="paymentTypeOptions"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full h-[35px]"
+          formControlName="paymentType"
+          showClear="true"
+        />
+        <label for="paymentType" class="!font-normal text-sm">Chọn loại giao dịch</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <p-select
+          [options]="processTypeOptions"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full h-[35px]"
+          formControlName="requestType"
+          showClear="true"
+        />
+        <label for="requestType" class="!font-normal text-sm">Chọn loại yêu cầu</label>
+      </p-floatlabel>
     </form>
     <div class="h-full text-sm">
       <app-table-meta
@@ -141,8 +151,3 @@
     </div>
   </div>
 </div>
-<p-toast
-  [showTransformOptions]="'translateY(100%)'"
-  [showTransitionOptions]="'300ms'"
-  [hideTransitionOptions]="'300ms'"
-></p-toast>

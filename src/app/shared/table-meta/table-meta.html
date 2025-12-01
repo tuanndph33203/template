@@ -197,42 +197,46 @@
                 >
                   <div class="flex gap-2">
                     @for (btn of item.actionButtons; track $index) {
-                      <button
-                        [pTooltip]="btn.tooltipLabel ?? ''"
-                        severity="secondary"
-                        tooltipPosition="top"
-                        class="flex justify-center items-center gap-2 px-2 py-1 rounded bg-blue-500 text-white text-sm"
-                        (click)="btn.children ? toggleMenu($event, menu) : onActionClick(btn, data)"
-                      >
-                        @if (btn.icon) {
-                          <i class="{{ btn.icon }}"></i>
-                        }
-                        @if (btn.label) {
-                          <span class="w-fit">
-                            {{ btn.label }}
-                          </span>
-                        }
-                      </button>
-                      <p-popover #menu>
-                        @for (btnChild of btn.children; track $index) {
-                          <button
-                            [pTooltip]="btnChild.tooltipLabel ?? ''"
-                            severity="secondary"
-                            tooltipPosition="top"
-                            class="flex items-center justify-center gap-2 px-2 py-1 rounded bg-blue-600 text-white text-sm"
-                            (click)="onActionClick(btnChild, data)"
-                          >
-                            @if (btnChild.icon) {
-                              <i class=" {{ btnChild.icon }}"></i>
-                            }
-                            @if (btn.label) {
-                              <span class="w-fit">
-                                {{ btn.label }}
-                              </span>
-                            }
-                          </button>
-                        }
-                      </p-popover>
+                      @if (!btn.visible || btn.visible(data)) {
+                        <button
+                          [pTooltip]="btn.tooltipLabel ?? ''"
+                          severity="secondary"
+                          tooltipPosition="top"
+                          class="flex justify-center items-center gap-2 px-2 py-1 rounded bg-blue-500 text-white text-sm"
+                          (click)="
+                            btn.children ? toggleMenu($event, menu) : onActionClick(btn, data)
+                          "
+                        >
+                          @if (btn.icon) {
+                            <i class="{{ btn.icon }}"></i>
+                          }
+                          @if (btn.label) {
+                            <span class="w-fit">
+                              {{ btn.label }}
+                            </span>
+                          }
+                        </button>
+                        <p-popover #menu>
+                          @for (btnChild of btn.children; track $index) {
+                            <button
+                              [pTooltip]="btnChild.tooltipLabel ?? ''"
+                              severity="secondary"
+                              tooltipPosition="top"
+                              class="flex items-center justify-center gap-2 px-2 py-1 rounded bg-blue-600 text-white text-sm"
+                              (click)="onActionClick(btnChild, data)"
+                            >
+                              @if (btnChild.icon) {
+                                <i class=" {{ btnChild.icon }}"></i>
+                              }
+                              @if (btn.label) {
+                                <span class="w-fit">
+                                  {{ btn.label }}
+                                </span>
+                              }
+                            </button>
+                          }
+                        </p-popover>
+                      }
                     }
                   </div>
                 </td>
@@ -263,8 +267,8 @@
 </div>
 <p-popover #op>
   <div class="flex flex-col gap-3">
-    <h1>Chuyển đổi cột</h1>
-    <div class="grid grid-cols-2 gap-2 w-[25rem] bg-slate-50 p-2 rounded">
+    <h1 class="font-semibold">Tùy chỉnh hiển thị cột</h1>
+    <div class="grid grid-cols-2 gap-2 w-[25rem] bg-blue-50 p-2 rounded">
       @for (item of columns(); track $index) {
         <div class="flex items-center gap-2">
           <p-checkbox
@@ -281,7 +285,7 @@
     <div class="flex justify-center gap-3">
       <button
         pButton
-        severity="contrast"
+        severity="primary"
         type="submit"
         size="small"
         class="!py-1.5"
@@ -291,7 +295,7 @@
       </button>
       <button
         pButton
-        severity="danger"
+        severity="contrast"
         type="submit"
         size="small"
         class="!py-1.5"

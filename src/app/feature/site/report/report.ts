@@ -16,8 +16,9 @@ import {
   TransactionTypesOptions,
 } from '@app/core/constants/invoice';
 import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
-import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-report',
   imports: [
@@ -27,7 +28,7 @@ import { Toast } from 'primeng/toast';
     Select,
     InputTextModule,
     ReactiveFormsModule,
-    Toast,
+    FloatLabelModule,
   ],
   templateUrl: './report.html',
   styleUrl: './report.scss',
@@ -67,8 +68,9 @@ export class Report implements OnInit {
     size: 10,
   });
 
-  report = inject(ReportService);
+  reportService = inject(ReportService);
   dialogService = inject(DialogService);
+  private messageService = inject(MessageService);
 
   constructor() {
     effect(() => {
@@ -79,7 +81,7 @@ export class Report implements OnInit {
   ngOnInit() {
     this.formSearch.valueChanges
       .pipe(
-        debounceTime(500),
+        debounceTime(600),
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
       )
       .subscribe((filters) => {
@@ -89,7 +91,7 @@ export class Report implements OnInit {
           ...filters,
         }));
       });
-    this.report.getMerchant().subscribe((res) => {
+    this.reportService.getMerchant().subscribe((res) => {
       if (res.Code === 200) {
         this.branchOptions.set(res.Data);
       }
@@ -97,14 +99,24 @@ export class Report implements OnInit {
   }
   search(query: IInvoiceQuery): void {
     const payload = this.cleanQuery(query);
-
     this.loading.set(true);
-    this.report
+    this.reportService
       .searchInvoice(payload)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe((res) => {
         this.total.set(res.Data.TotalElements);
-        this.data.set(res.Data.Content);
+        this.data.set([
+          ...res.Data.Content,
+          ...res.Data.Content,
+          ...res.Data.Content,
+          ...res.Data.Content,
+          ...res.Data.Content,
+          ...res.Data.Content,
+          ...res.Data.Content,
+          ...res.Data.Content,
+          ...res.Data.Content,
+          ...res.Data.Content,
+        ]);
       });
   }
 
@@ -129,18 +141,52 @@ export class Report implements OnInit {
       });
     }
     if (data.action.type === 'publish') {
+      this.reportService
+        .publishInvoice(data.row.RefId)
+        .pipe(finalize(() => this.loading.set(false)))
+        .subscribe({
+          next: (res) => {
+            if (res.Code === 200) {
+            } else {
+              this.messageService.clear();
+              this.messageService.add({
+                severity: 'info',
+                summary: 'Đã xảy ra lỗi khi phát hành!',
+                detail: res.Message,
+              });
+              return;
+            }
+          },
+          error: (err) => {
+            console.log('❌ Lỗi:', err.error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Phát hành thất bại',
+              detail: Object.values(err.error.errors).join(' | '),
+            });
+          },
+        });
     }
-    if (data.action.type === 'download') {
-      const url =
-        'https://test.meinvoice.vn/download/tra-cuu/downloadhandler.ashx?type=pdf&code=72c018ea-a0cc-44d1-8c78-72254a5f489e&Viewer=0&SearchType=2';
 
-      const a = document.createElement('a');
-      a.href = url;
-      a.setAttribute('download', 'hoadon.pdf');
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+    if (data.action.type === 'download') {
+      this.reportService
+        .getDetailInvoice(data.row.RefId)
+        .pipe(finalize(() => this.loading.set(false)))
+        .subscribe((res) => {
+          if (res.Code === 200) {
+            if (res.Data.IsHaveInoiveFile) {
+              window.open(res.Data.UrlFileInvoice, '_blank');
+            } else {
+              this.messageService.clear();
+              this.messageService.add({
+                severity: 'info',
+                summary: 'Hóa đơn chưa phát hành!',
+                detail: 'Vui lòng thử lại sau',
+              });
+              return;
+            }
+          }
+        });
     }
   }
 

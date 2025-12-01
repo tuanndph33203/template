@@ -27,6 +27,7 @@ export interface ITableConfig {
     type: string;
     tooltipLabel?: string;
     children?: ITableAction[];
+    visible?: (row: any) => boolean;
   }>;
 }
 export interface ITableAction {

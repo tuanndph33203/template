@@ -75,11 +75,13 @@ export const TABLE_COLUMNS: ITableConfig[] = [
         icon: 'pi pi-file-export',
         tooltipLabel: 'Phát hành',
         type: 'publish',
+        visible: (v) => v.Status === 2,
       },
       {
         icon: 'pi pi-download',
         tooltipLabel: 'Tải xuống',
         type: 'download',
+        visible: (v) => v.Status === 1,
       },
     ],
   },
