@@ -1,4 +1,4 @@
-<div class="card space-y-4">
+<div class="card space-y-4 relative">
   <div class="flex justify-between gap-4">
     <div class="flex items-end">
       @if (showTotalRecord()) {
@@ -42,33 +42,27 @@
 
   <p-table
     [scrollable]="true"
+    [lazy]="true"
     [value]="dataTable()"
     [virtualScroll]="virtualScroll()"
-    [virtualScrollItemSize]="rowHeight()"
     [scrollHeight]="scrollHeight()"
+    [virtualScrollOptions]="{
+      itemSize: rowHeight(),
+      delay: 0,
+    }"
     [loading]="showLoading()"
+    [totalRecords]="totalData()"
     stripedRows
     showGridlines
     class="bg-white"
+    (onLazyLoad)="onScroll($event)"
   >
     <ng-template pTemplate="header">
       <tr>
-        @if (showCheckboxToggle()) {
-          <th>
-            <p-checkbox
-              [binary]="true"
-              [ngModel]="allSelected"
-              (onChange)="toggleSelectAll($event)"
-            ></p-checkbox>
-          </th>
-        }
+        @if (showCheckboxToggle()) {}
         @for (item of columns(); track $index) {
           @if (!item.visible) {
-            @if (item.type !== 'action') {
-              <th [style]="{ minWidth: item.minWidth, maxWidth: item.maxWidth, width: item.width }">
-                {{ item.label }}
-              </th>
-            } @else {
+            @if (item.type == 'action') {
               <th
                 pFrozenColumn
                 [alignFrozen]="'right'"
@@ -80,6 +74,20 @@
               >
                 {{ item.label }}
               </th>
+            } @else if (item.type == 'checkbox') {
+              <th [style]="{ minWidth: item.minWidth, maxWidth: item.maxWidth, width: item.width }">
+                <div class="flex justify-center items-center">
+                  <p-checkbox
+                    [binary]="true"
+                    [ngModel]="allSelected"
+                    (onChange)="toggleSelectAll($event)"
+                  ></p-checkbox>
+                </div>
+              </th>
+            } @else {
+              <th [style]="{ minWidth: item.minWidth, maxWidth: item.maxWidth, width: item.width }">
+                {{ item.label }}
+              </th>
             }
           }
         }
@@ -87,19 +95,25 @@
     </ng-template>
     <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
       <tr>
-        @if (showCheckboxToggle()) {
-          <td>
-            <p-checkbox
-              [binary]="true"
-              [ngModel]="selectedRows.includes(data)"
-              (onChange)="toggleRow(data, $event)"
-            ></p-checkbox>
-          </td>
-        }
-
         @for (item of columns(); track $index) {
           @if (!item.visible) {
             @switch (item.type) {
+              @case ('checkbox') {
+                <td
+                  [style]="{
+                    minWidth: item.minWidth,
+                    maxWidth: item.maxWidth,
+                    width: item.width,
+                  }"
+                  class="flex justify-center items-center"
+                >
+                  <p-checkbox
+                    [binary]="true"
+                    [ngModel]="selectedRows.includes(data)"
+                    (onChange)="toggleRow(data, $event)"
+                  ></p-checkbox>
+                </td>
+              }
               @case ('index') {
                 <td
                   [style]="{

@@ -2,7 +2,7 @@ export interface ITableConfig {
   label: string;
   field: string;
 
-  type?: 'index' | 'text' | 'date' | 'image' | 'transform' | 'currency' | 'action';
+  type?: 'checkbox' | 'index' | 'text' | 'date' | 'image' | 'transform' | 'currency' | 'action';
 
   align?: 'right' | 'left' | 'center';
 

@@ -2,6 +2,7 @@ import { ITableConfig } from '../model/common';
 import { InvoiceStatus, InvoiceStatusLabel } from './invoice';
 
 export const TABLE_COLUMNS: ITableConfig[] = [
+  { label: 'Checkbox', field: 'checkbox', type: 'checkbox', minWidth: '50px' },
   { label: 'STT', field: 'Index', type: 'index', minWidth: '40px', align: 'center' },
 
   { label: 'Ngày', field: 'DocumentDate', type: 'text', minWidth: '90px' },

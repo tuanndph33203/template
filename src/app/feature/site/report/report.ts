@@ -17,7 +17,7 @@ import {
 } from '@app/core/constants/invoice';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-report',
@@ -65,7 +65,7 @@ export class Report implements OnInit {
 
   searchQuery = signal<IInvoiceQuery>({
     page: 1,
-    size: 10,
+    size: 20,
   });
 
   reportService = inject(ReportService);
@@ -97,34 +97,40 @@ export class Report implements OnInit {
       }
     });
   }
-  search(query: IInvoiceQuery): void {
+  search(query: IInvoiceQuery, firstLoad?: boolean): void {
+    console.log(query);
+    const page = query.page ?? 1;
+    const size = query.size ?? 20;
     const payload = this.cleanQuery(query);
     this.loading.set(true);
+
     this.reportService
       .searchInvoice(payload)
-      .pipe(finalize(() => this.loading.set(false)))
+      .pipe(
+        delay(400),
+        finalize(() => this.loading.set(false)),
+      )
       .subscribe((res) => {
         this.total.set(res.Data.TotalElements);
-        this.data.set([
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-        ]);
+        if (firstLoad) {
+          this.data.set(new Array(this.total()).fill(null));
+          return;
+        }
+        const start = (page - 1) * size;
+        this.data.update((prev) => {
+          const clone = [...prev];
+          clone.splice(start, size, ...res.Data.Content);
+          return clone;
+        });
       });
   }
+
+  fillPage(page: number, size: number) {}
 
   onScroll(event: LazyLoadEventData) {
     if (event.first === this.lastFirst) return;
     this.lastFirst = event.first;
-
-    const nextPage = event.first / event.rows + 1;
+    const nextPage = Math.ceil(event.first / event.rows + 1);
     if (nextPage > this.searchQuery().page) {
       this.searchQuery.update((q) => ({ ...q, page: nextPage }));
     }

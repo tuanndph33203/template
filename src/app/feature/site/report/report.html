@@ -130,24 +130,18 @@
       <app-table-meta
         [dataTable]="data()"
         [columns]="colsTemp"
-        [scrollHeight]="'550px'"
+        [pageSize]="searchQuery().size"
+        [scrollHeight]="`${43 * 10 + 54}px`"
         [showFrozen]="true"
         [showNodata]="true"
         [showColumnToggle]="true"
         [showTotalRecord]="true"
+        [virtualScroll]="true"
         [showLoading]="loading()"
         [totalData]="total()"
         (actionClick)="handleAction($event)"
         (actionLazyload)="onScroll($event)"
       />
-      <div class="flex items-center justify-center">
-        <p-paginator
-          (onPageChange)="onPageChange($event)"
-          [first]="(searchQuery().page - 1) * searchQuery().size"
-          [rows]="searchQuery().size"
-          [totalRecords]="total()"
-        />
-      </div>
     </div>
   </div>
 </div>
