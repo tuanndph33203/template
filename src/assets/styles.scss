@@ -1,2 +1,5 @@
-@use './tailwind.scss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import 'primeicons/primeicons.css';
