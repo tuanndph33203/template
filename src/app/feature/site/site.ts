@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from "@app/core/layout/header/header";
+import { AuthService } from '@app/core/auth/auth.service';
+import { Header } from '@app/core/layout/header/header';
 
 @Component({
   selector: 'app-site',

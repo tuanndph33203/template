@@ -10,22 +10,16 @@ export class AuthService {
   private authUrl = environment.authencationUrl;
 
   loginBySectionId(sessionId: string): Observable<any> {
-    this.authStore.setLoading(true);
     return this.httpClient
       .get(`${this.authUrl}/authentication/issue-token?sectionId=${sessionId}`)
       .pipe(
         tap((res: any) => {
-          this.authStore.setAuth(res.data);
+          this.authStore.setAuth(res);
         }),
-        finalize(() => this.authStore.setLoading(false)),
       );
   }
 
   redirectMicrosoft() {
     window.location.href = `${this.authUrl}/authentication/login-microsoft?clientKey=B3394396-4970-4459-812C-3AFFFA51C7E0`;
-  }
-
-  getToken() {
-    return this.authStore.getToken();
   }
 }

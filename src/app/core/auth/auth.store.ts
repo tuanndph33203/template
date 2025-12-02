@@ -1,38 +1,53 @@
-import { Injectable, computed, signal } from '@angular/core';
-
-export interface AuthUser {
-  id: number;
-  email: string;
-  name: string;
-}
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { AuthResponse, IUser } from '../model/auth';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
-  private _user = signal<AuthUser | null>(null);
-  private _accessToken = signal<string | null>(localStorage.getItem('authToken'));
-  private _loading = signal<boolean>(false);
+  private userSubject = new BehaviorSubject<IUser | null>(this.restoreUser());
+  private tokenSubject = new BehaviorSubject<string | null>(localStorage.getItem('authToken'));
 
-  user = computed(() => this._user());
-  isAuthenticated = computed(() => !!this._accessToken());
-  loading = computed(() => this._loading());
+  user$ = this.userSubject.asObservable();
+  token$ = this.tokenSubject.asObservable();
 
-  setAuth(token: string | null) {
-    // this._user.set(user);
-    this._accessToken.set(token);
-
-    if (token) localStorage.setItem('authToken', token);
-    else localStorage.removeItem('authToken');
+  get user() {
+    return this.userSubject.value;
+  }
+  get token() {
+    return this.tokenSubject.value;
   }
 
-  setLoading(value: boolean) {
-    this._loading.set(value);
+  setAuth(res: AuthResponse | null) {
+    if (!res) return this.clear();
+
+    const { accessToken, refreshToken, accessTokenExpiresAt, refreshTokenExpiresAt, ...user } = res;
+    this.userSubject.next(user);
+    this.tokenSubject.next(accessToken);
+
+    localStorage.setItem('authToken', accessToken);
+    localStorage.setItem('userInfo', JSON.stringify(user));
   }
 
   clear() {
-    this.setAuth(null);
+    this.userSubject.next(null);
+    this.tokenSubject.next(null);
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userInfo');
   }
 
   getToken(): string | null {
-    return this._accessToken();
+    return this.tokenSubject.value;
+  }
+
+  getUser(): IUser | null {
+    return this.userSubject.value;
+  }
+
+  private restoreUser(): IUser | null {
+    try {
+      return JSON.parse(localStorage.getItem('userInfo') ?? 'null');
+    } catch {
+      return null;
+    }
   }
 }

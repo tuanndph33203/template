@@ -5,13 +5,13 @@ export const TABLE_COLUMNS: ITableConfig[] = [
   { label: 'STT', field: 'Index', type: 'index', minWidth: '40px', align: 'center' },
 
   { label: 'Ngày', field: 'DocumentDate', type: 'text', minWidth: '90px' },
-  { label: 'CT No', field: 'DocumentNumber', type: 'text', minWidth: '130px' },
+  { label: 'Số c.từ', field: 'DocumentNumber', type: 'text', minWidth: '130px' },
   { label: 'Chi nhánh', field: 'MerchantName', type: 'text', minWidth: '140px' },
   { label: 'Mã KH', field: 'CustomerCode', type: 'text', minWidth: '80px' },
   { label: 'Di động', field: 'CustomerPhone', type: 'text', minWidth: '90px' },
   { label: 'Tên KH', field: 'CustomerName', type: 'text', minWidth: '120px', tooltip: true },
 
-  { label: 'CCC', field: 'CustomerIdNumber', type: 'text', minWidth: '100px' },
+  { label: 'CCCD', field: 'CustomerIdNumber', type: 'text', minWidth: '100px' },
   { label: 'Tên công ty', field: 'CustomerEmployeeName', type: 'text', minWidth: '150px' },
   { label: 'Địa chỉ', field: 'CustomerAddress', type: 'text', minWidth: '200px', tooltip: true },
 
@@ -21,7 +21,7 @@ export const TABLE_COLUMNS: ITableConfig[] = [
   { label: 'Loại giao dịch', field: 'TypeService', type: 'text', minWidth: '120px' },
 
   {
-    label: 'Tổng tiền chưa VAT chưa chiết khấu',
+    label: 'Tổng tiền chưa VAT, chưa chiết khấu',
     field: 'TotalSaleAmountOC',
     type: 'currency',
     minWidth: '150px',

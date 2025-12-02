@@ -2,13 +2,12 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { AuthStore } from '../auth/auth.store';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  const authService = inject(AuthService);
-
-  const token = authService.getToken();
+  const authStore = inject(AuthStore);
+  const token = authStore.getToken();
 
   const modifiedReq = req.clone({
     setHeaders: {

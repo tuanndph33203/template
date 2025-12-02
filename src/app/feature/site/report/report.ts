@@ -19,6 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { AuthService } from '@app/core/auth/auth.service';
 @Component({
   selector: 'app-report',
   imports: [
@@ -68,8 +69,8 @@ export class Report implements OnInit {
     size: 10,
   });
 
-  reportService = inject(ReportService);
-  dialogService = inject(DialogService);
+  private reportService = inject(ReportService);
+  private dialogService = inject(DialogService);
   private messageService = inject(MessageService);
 
   constructor() {
@@ -104,19 +105,8 @@ export class Report implements OnInit {
       .searchInvoice(payload)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe((res) => {
-        this.total.set(res.Data.TotalElements);
-        this.data.set([
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-          ...res.Data.Content,
-        ]);
+        this.total.set(res.Data?.TotalElements);
+        this.data.set(res.Data?.Content);
       });
   }
 
@@ -169,18 +159,64 @@ export class Report implements OnInit {
     }
 
     if (data.action.type === 'download') {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Đang xử lý...',
+        detail: 'Đang tải hóa đơn, vui lòng chờ',
+        life: 5000,
+      });
       this.reportService
-        .getDetailInvoice(data.row.RefId)
+        .downloadInvoices([data.row.RefId])
         .pipe(finalize(() => this.loading.set(false)))
         .subscribe((res) => {
           if (res.Code === 200) {
-            if (res.Data.IsHaveInoiveFile) {
-              window.open(res.Data.UrlFileInvoice, '_blank');
+            if (res.Data) {
+              const list = JSON.parse(res.Data) as Array<{
+                TransactionID: string;
+                Data: string;
+                ErrorCode?: string;
+              }>;
+
+              if (!list.length) {
+                this.messageService.add({
+                  severity: 'info',
+                  summary: 'Không có dữ liệu PDF',
+                });
+                return;
+              }
+              list.forEach((item) => {
+                if (!item.Data) return;
+
+                const base64 = item.Data;
+                const fileName = `${data.row.DocumentNumber}_${data.row.InvoiceNumber}_${data.row.DocumentDate}.pdf`;
+
+                const byteCharacters = atob(base64);
+                const byteNumbers = new Array(byteCharacters.length);
+
+                for (let i = 0; i < byteCharacters.length; i++) {
+                  byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+
+                a.remove();
+                URL.revokeObjectURL(url);
+                this.messageService.clear();
+              });
             } else {
               this.messageService.clear();
               this.messageService.add({
                 severity: 'info',
-                summary: 'Hóa đơn chưa phát hành!',
+                summary: 'Tải hóa đơn thất bại!',
                 detail: 'Vui lòng thử lại sau',
               });
               return;
