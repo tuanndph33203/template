@@ -13,15 +13,15 @@ export class ReportService {
   private httpClient = inject(HttpClient);
 
   publishInvoice(refId: string): Observable<any> {
-    return this.http.get('/syncdata/publish-invoice?refId=' + refId);
+    return this.http.get('/invoice/publish-invoice?refId=' + refId);
   }
 
   searchInvoice(params: any): Observable<ApiResponse<IInvoice[]>> {
-    return this.http.post('/syncdata/getby-filter', params);
+    return this.http.post('/invoice/getby-filter', params);
   }
 
   getDetailInvoice(refId: string): Observable<ApiResponseDetail<IInvoiceDetail>> {
-    return this.http.get('/syncdata/get-detail-invoice', { refId });
+    return this.http.get('/invoice/get-detail-invoice', { refId });
   }
 
   getMerchant(): Observable<ApiResponseDetail<any>> {
@@ -29,10 +29,10 @@ export class ReportService {
   }
 
   publishInvoiceManual(refId: string): Observable<any> {
-    return this.http.get('/syncdata/publish-invoice', { refId });
+    return this.http.get('/invoice/publish-invoice', { refId });
   }
 
   downloadInvoices(refIds: string[]): Observable<any> {
-    return this.http.post('/syncdata/download-invoice', refIds);
+    return this.http.post('/invoice/download-invoice', refIds);
   }
 }
