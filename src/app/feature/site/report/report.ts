@@ -19,7 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import { AuthService } from '@app/core/auth/auth.service';
+
 @Component({
   selector: 'app-report',
   imports: [

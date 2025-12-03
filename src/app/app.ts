@@ -10,5 +10,5 @@ import { Toast } from 'primeng/toast';
   providers: [MessageService],
 })
 export class App {
-  constructor() {}
+  constructor() { }
 }
