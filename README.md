@@ -63,59 +63,103 @@ For more information on using the Angular CLI, including detailed command refere
 ```
 src/
 ├── app/
-│   ├── core/
-│   │   ├── layout/
+│   ├── core/                         # Chỉ load 1 lần duy nhất (singleton)
+│   │   ├── layout/                   # Layout dùng chung
+│   │   │   ├── main-layout/
+│   │   │   │   ├── main-layout.ts
+│   │   │   │   ├── main-layout.html
+│   │   │   │   └── main-layout.scss
 │   │   │   ├── header/
 │   │   │   └── footer/
+│   │   │
 │   │   ├── interceptors/
 │   │   │   ├── auth.interceptor.ts
 │   │   │   └── error.interceptor.ts
+│   │   │
 │   │   ├── guards/
 │   │   │   └── auth.guard.ts
-│   │   ├── services/
+│   │   │
+│   │   ├── services/                # Service global, Singleton
 │   │   │   ├── http.service.ts
 │   │   │   ├── storage.service.ts
 │   │   │   └── seo.service.ts
+│   │   │
 │   │   ├── constants/
-│   │   │   ├── api-endpoints.constant.ts
+│   │   │   ├── api.constant.ts
+│   │   │   ├── app.constant.ts
 │   │   │   └── environment.constant.ts
+│   │   │
 │   │   ├── models/
-│   │   │   ├── movie.model.ts
 │   │   │   ├── user.model.ts
-│   │   │   └── api-response.model.ts
+│   │   │   ├── api-response.model.ts
+│   │   │   └── movie.model.ts
+│   │   │
 │   │   └── utils/
-│   │       ├── format-date.util.ts
-│   │       ├── slugify.util.ts
+│   │       ├── date.util.ts
+│   │       ├── slug.util.ts
 │   │       └── pagination.util.ts
 │   │
-│   ├── feature/
-│   │   ├── home/
-│   │   │   ├── service/
-│   │   │   ├── components/
-│   │   │   ├── home.component.ts
-│   │   │   ├── home.component.html
-│   │   │   └── home.component.scss
-│   │   ├── movie-detail/
-│   │   ├── watch/
-│   │   ├── category/
-│   │   └── profile/
 │   │
-│   ├── share/
+│   ├── feature/                     # Feature-based (mỗi module = 1 domain)
+│   │   ├── home/
+│   │   │   ├── pages/
+│   │   │   │   └── home/
+│   │   │   │       ├── home.ts
+│   │   │   │       ├── home.html
+│   │   │   │       └── home.scss
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   ├── banner/
+│   │   │   │   ├── movie-card/
+│   │   │   │   └── search-box/
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   │   └── home.service.ts
+│   │   │   │
+│   │   │   ├── models/
+│   │   │   │   └── home.model.ts
+│   │   │   │
+│   │   │   └── home.routes.ts
+│   │   │
+│   │   ├── movie-detail/
+│   │   │   ├── pages/
+│   │   │   ├── components/
+│   │   │   ├── services/
+│   │   │   └── movie-detail.routes.ts
+│   │   │
+│   │   ├── watch/
+│   │   │   ├── pages/
+│   │   │   ├── components/
+│   │   │   └── watch.routes.ts
+│   │   │
+│   │   ├── category/
+│   │   │   ├── pages/
+│   │   │   └── category.routes.ts
+│   │   │
+│   │   └── profile/
+│   │       ├── pages/
+│   │       └── profile.routes.ts
+│   │
+│   │
+│   ├── share/                       # Shared for entire App
 │   │   ├── ui/
 │   │   │   ├── button/
 │   │   │   ├── card/
 │   │   │   └── rating/
+│   │   │
 │   │   ├── pipes/
 │   │   │   ├── safe-html.pipe.ts
-│   │   │   ├── truncate.pipe.ts
+│   │   │   └── truncate.pipe.ts
+│   │   │
 │   │   ├── directives/
 │   │   │   └── lazy-load.directive.ts
+│   │   │
 │   │   └── services/
 │   │       └── toast.service.ts
 │   │
+│   │
 │   ├── app.routes.ts
 │   ├── app.config.ts
-│   ├── app.config.server.ts
 │   ├── app.component.ts
 │   ├── app.component.html
 │   └── app.scss
@@ -131,5 +175,6 @@ src/
     ├── environment.ts
     ├── environment.dev.ts
     └── environment.prod.ts
+
 
 ```

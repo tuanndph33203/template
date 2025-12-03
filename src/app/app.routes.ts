@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth';
-import { NotFound } from './feature/not-found/not-found';
+import { NotFound } from './feature/errors/pages/not-found/not-found';
+import { SiteLayout } from './core/layout/site-layout/site-layout';
 
 export const routes: Routes = [
   {
@@ -8,33 +9,33 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./feature/auth/login/login').then((c) => c.Login),
+        loadComponent: () => import('./feature/auth/pages/login/login').then((c) => c.Login),
       },
       {
         path: 'login-callback',
         loadComponent: () =>
-          import('./feature/auth/login-callback/login-callback').then((c) => c.LoginCallback),
-      },
-      {
-        path: 'access',
-        loadComponent: () => import('./feature/auth/access/access').then((c) => c.Access),
-      },
-      {
-        path: 'error',
-        loadComponent: () => import('./feature/auth/error/error').then((c) => c.Error),
+          import('./feature/auth/pages/login-callback/login-callback').then((c) => c.LoginCallback),
       },
     ],
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./feature/site/site').then((c) => c.Site),
+    component: SiteLayout,
     canActivateChild: [authGuard],
     children: [
       {
         path: '',
-        loadComponent: () => import('./feature/site/report/report').then((c) => c.Report),
+        loadComponent: () => import('./feature/report/pages/report-list/report-list').then((c) => c.ReportList),
       },
     ],
+  },
+  {
+    path: 'access',
+    loadComponent: () => import('./feature/errors/pages/access/access').then((c) => c.Access),
+  },
+  {
+    path: 'error',
+    loadComponent: () => import('./feature/errors/pages/error/error').then((c) => c.Error),
   },
   {
     path: '**',

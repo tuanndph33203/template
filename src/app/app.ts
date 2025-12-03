@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Toast } from 'primeng/toast';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, Toast],
   templateUrl: './app.html',
   styleUrl: './app.scss',
-  providers: [MessageService],
+  providers: [MessageService, DialogService],
 })
 export class App {
   constructor() { }
