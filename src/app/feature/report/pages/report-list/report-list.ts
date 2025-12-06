@@ -11,11 +11,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import { TABLE_COLUMNS } from '../../constants/table';
 import { InvoiceStatusOptions, ProcessTypeOptions, TransactionTypesOptions } from '../../constants/report';
 import { IInvoice, IInvoiceQuery } from '../../models/report';
 import { ReportService } from '../../services/report';
 import { ReportDetail } from '../report-detail/report-detail';
+import { colsTempList } from '../../constants/table';
 @Component({
   selector: 'app-report-list',
   imports: [
@@ -31,7 +31,7 @@ import { ReportDetail } from '../report-detail/report-detail';
   styleUrl: './report-list.scss',
 })
 export class ReportList {
-  colsTemp = TABLE_COLUMNS;
+  colsTemp = colsTempList;
   lastFirst = 0;
   ref: DynamicDialogRef | null = null;
 
@@ -121,104 +121,126 @@ export class ReportList {
         header: 'Báo cáo hóa đơn chi tiết',
         width: '850px',
         height: '100vh',
-        data: data.row.RefId,
+        data: {
+          id: data.row.RefId
+        },
+        closable: true,
+
+      });
+    }
+    if (data.action.type === 'edit') {
+      this.ref = this.dialogService.open(ReportDetail, {
+        header: 'Chỉnh sửa hóa đơn',
+        width: '850px',
+        height: '100vh',
+        data: {
+          id: data.row.RefId,
+          edition: true
+        },
         closable: true,
       });
     }
     if (data.action.type === 'publish') {
-      this.reportService
-        .publishInvoice(data.row.RefId)
-        .pipe(finalize(() => this.loading.set(false)))
-        .subscribe({
-          next: (res) => {
-            if (res.Code === 200) {
-            } else {
-              this.messageService.clear();
-              this.messageService.add({
-                severity: 'info',
-                summary: 'Đã xảy ra lỗi khi phát hành!',
-                detail: res.Message,
-              });
-              return;
-            }
-          },
-          error: (err) => {
-            console.log('❌ Lỗi:', err.error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Phát hành thất bại',
-              detail: Object.values(err.error.errors).join(' | '),
-            });
-          },
-        });
+      this.hanlePublish(data)
     }
 
     if (data.action.type === 'download') {
-      this.messageService.add({
-        severity: 'info',
-        summary: 'Đang xử lý...',
-        detail: 'Đang tải hóa đơn, vui lòng chờ',
-        life: 5000,
-      });
-      this.reportService
-        .downloadInvoices([data.row.RefId])
-        .pipe(finalize(() => this.loading.set(false)))
-        .subscribe((res) => {
+      this.hanleDownload(data)
+    }
+  }
+  hanlePublish(data: { action: ITableAction; row: IInvoice }) {
+    this.reportService
+      .publishInvoice(data.row.RefId)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (res) => {
           if (res.Code === 200) {
-            if (res.Data) {
-              const list = JSON.parse(res.Data) as Array<{
-                TransactionID: string;
-                Data: string;
-                ErrorCode?: string;
-              }>;
+          } else {
+            this.messageService.clear();
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Đã xảy ra lỗi khi phát hành!',
+              detail: res.Message,
+            });
+            return;
+          }
+        },
+        error: (err) => {
+          console.log('❌ Lỗi:', err.error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Phát hành thất bại',
+            detail: Object.values(err.error.errors).join(' | '),
+          });
+        },
+      });
+  }
 
-              if (!list.length) {
-                this.messageService.add({
-                  severity: 'info',
-                  summary: 'Không có dữ liệu PDF',
-                });
-                return;
-              }
-              list.forEach((item) => {
-                if (!item.Data) return;
+  hanleDownload(data: { action: ITableAction; row: IInvoice }) {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Đang xử lý...',
+      detail: 'Đang tải hóa đơn, vui lòng chờ',
+      life: 5000,
+    });
+    this.reportService
+      .downloadInvoices([data.row.RefId])
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe((res) => {
+        if (res.Code === 200) {
+          if (res.Data) {
+            const list = JSON.parse(res.Data) as Array<{
+              TransactionID: string;
+              Data: string;
+              ErrorCode?: string;
+            }>;
 
-                const base64 = item.Data;
-                const fileName = `${data.row.DocumentNumber}_${data.row.InvoiceNumber}_${data.row.DocumentDate}.pdf`;
-
-                const byteCharacters = atob(base64);
-                const byteNumbers = new Array(byteCharacters.length);
-
-                for (let i = 0; i < byteCharacters.length; i++) {
-                  byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-                const url = URL.createObjectURL(blob);
-
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-
-                a.remove();
-                URL.revokeObjectURL(url);
-                this.messageService.clear();
-              });
-            } else {
-              this.messageService.clear();
+            if (!list.length) {
               this.messageService.add({
                 severity: 'info',
-                summary: 'Tải hóa đơn thất bại!',
-                detail: 'Vui lòng thử lại sau',
+                summary: 'Không có dữ liệu PDF',
               });
               return;
             }
+            list.forEach((item) => {
+              if (!item.Data) return;
+
+              const base64 = item.Data;
+              const fileName = `${data.row.DocumentNumber}_${data.row.InvoiceNumber}_${data.row.DocumentDate}.pdf`;
+
+              const byteCharacters = atob(base64);
+              const byteNumbers = new Array(byteCharacters.length);
+
+              for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+              }
+
+              const byteArray = new Uint8Array(byteNumbers);
+              const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+              const url = URL.createObjectURL(blob);
+
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = fileName;
+              document.body.appendChild(a);
+              a.click();
+
+              a.remove();
+              URL.revokeObjectURL(url);
+              this.messageService.clear();
+            });
+          } else {
+            this.messageService.clear();
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Tải hóa đơn thất bại!',
+              detail: 'Vui lòng thử lại sau',
+            });
+            return;
           }
-        });
-    }
+        }
+      });
   }
 
   onPageChange(event: PaginatorState) {

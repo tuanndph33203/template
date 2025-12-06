@@ -2,7 +2,7 @@ export interface ITableConfig {
   label: string;
   field: string;
 
-  type?: 'index' | 'text' | 'date' | 'image' | 'transform' | 'currency' | 'input' | 'action';
+  type?: 'index' | 'text' | 'date' | 'image' | 'transform' | 'currency' | 'number' | 'select' | 'action';
 
   align?: 'right' | 'left' | 'center';
 
@@ -19,6 +19,14 @@ export interface ITableConfig {
 
   truncate?: number;
   lineClamp?: 1 | 2 | 3 | 4 | 5;
+  edition?: boolean
+  inputConfig?: {
+    prefix?: string
+    suffix?: string
+    min?: number;
+    max?: number;
+  }
+
 
   actionButtons?: Array<{
     label?: string;

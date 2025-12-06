@@ -7,67 +7,26 @@ import { TableMeta } from '@app/shared/ui/table-meta/table-meta';
 import { ITableConfig } from '@app/core/models/common';
 import { ReportService } from '../../services/report';
 import { NumberToVietnamesePipe } from '@app/shared/pipes/number-to-vietnamese-pipe';
-import { finalize } from 'rxjs';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { IInvoiceDetail, IInvoiceItem } from '../../models/report';
+import { colsTempDetail, colsTempEdit, colsTempSummary } from '../../constants/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { Loading } from "@app/shared/ui/loading/loading";
+import { InputText } from 'primeng/inputtext';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, TableMeta, NumberToVietnamesePipe],
+  imports: [CommonModule, TableModule, ButtonModule, TableMeta, NumberToVietnamesePipe, TooltipModule, Loading, InputText, ReactiveFormsModule],
   templateUrl: './report-detail.html',
   styleUrl: './report-detail.scss',
 })
 export class ReportDetail implements OnInit {
-  colsTemp: ITableConfig[] = [
-    { label: 'STT', field: 'index', type: 'index', align: 'center' },
-    {
-      label: 'Tên hàng hóa, dịch vụ',
-      field: 'ItemName',
-      type: 'text',
-      truncate: 25,
-      tooltip: true,
-      tooltipField: 'ItemName',
-    },
-    { label: 'Vé', field: 'UnitName', type: 'text', align: 'right', minWidth: '40px' },
-    { label: 'DVT', field: 'LineNumber', type: 'text', minWidth: '40px' },
-    { label: 'Số lượng', field: 'Quantity', type: 'text', align: 'right' },
-    { label: 'Đơn giá trước chiết khẩu', field: 'UnitPrice', type: 'currency', align: 'right' },
-    { label: 'Tiền chiết khấu', field: 'DiscountAmountOC', type: 'currency', align: 'right' },
-    {
-      label: 'Thành tiền trước thuế GTGT',
-      field: 'AmountWithoutVATOC',
-      type: 'currency',
-      align: 'right',
-    },
-    { label: 'Thuế suất GTGT', field: 'VatRateName', type: 'text' },
-    { label: 'Tiền thuế GTGT', field: 'VatAmountOC', type: 'currency', align: 'right' },
-    { label: 'Thành tiền sau thuế GTGT', field: 'AmountVATOC', type: 'currency', align: 'right' },
-  ];
-  summaryColsTemp: ITableConfig[] = [
-    { label: 'Tổng hợp', field: 'title', type: 'text' },
 
-    {
-      label: 'Thành tiền trước thuế GTGT',
-      field: 'AmountWithoutVATOC',
-      type: 'input',
-      align: 'right',
-    },
+  colsTempSummary: ITableConfig[] = colsTempSummary
+  colsTemp = signal<ITableConfig[]>([])
 
-    {
-      label: 'Tiền thuế GTGT',
-      field: 'VatAmountOC',
-      type: 'currency',
-      align: 'right',
-    },
-
-    {
-      label: 'Cộng tiền thanh toán',
-      field: 'TotalPayment',
-      type: 'currency',
-      align: 'right',
-    },
-  ];
   loading = signal(true);
   detail = signal<IInvoiceDetail | null>(null);
   items = signal<IInvoiceItem[]>([]);
@@ -75,8 +34,30 @@ export class ReportDetail implements OnInit {
   grandTotal = signal(0);
   totalInWords = signal(0);
   showPDF = signal(false);
+  edition = signal(false);
   urlFileInvoice = signal<SafeResourceUrl>('');
   summaryTableData = signal<any[]>([]);
+  listItems = signal<any[]>([]);
+
+  editingField = signal<string | null>(null);
+
+  invoiceForm = new FormGroup({
+    Type: new FormControl(1, Validators.required),
+    RefId: new FormControl('', Validators.required),
+    CustomerName: new FormControl('', Validators.required),
+    CustomerCompanyName: new FormControl(''),
+    CustomerTaxCode: new FormControl(''),
+    CustomerAddress: new FormControl('', Validators.required),
+    CustomerPhone: new FormControl(
+      '',
+      [Validators.required, Validators.pattern(/^[0-9]{9,11}$/)]
+    ),
+    CustomerIDNumber: new FormControl(
+      '',
+      [Validators.required, Validators.minLength(9), Validators.maxLength(12)]
+    ),
+    Products: new FormArray<FormGroup>([], Validators.required),
+  });
 
   config = inject(DynamicDialogConfig);
   service = inject(ReportService);
@@ -84,10 +65,17 @@ export class ReportDetail implements OnInit {
 
   ngOnInit(): void {
     this.getInvoice()
+    if (this.config.data.edition) {
+      this.edition.set(true)
+      this.colsTemp.set(colsTempEdit)
+    } else {
+      this.colsTemp.set(colsTempDetail)
+    }
+
   }
   getInvoice() {
     this.service
-      .getDetailInvoice(this.config.data)
+      .getDetailInvoice(this.config.data.id)
       .subscribe({
         next: (res) => {
           if (res.Code === 200) {
@@ -99,7 +87,18 @@ export class ReportDetail implements OnInit {
               return;
             }
 
+
             const d: IInvoiceDetail = res.Data;
+            this.invoiceForm.patchValue({
+              Type: 1,
+              RefId: d.RefId,
+              CustomerName: d.BuyerInvoice.BuyerFullName,
+              CustomerCompanyName: d.BuyerInvoice.BuyerLegalName,
+              CustomerTaxCode: d.BuyerInvoice.BuyerTaxCode,
+              CustomerAddress: d.BuyerInvoice.BuyerAddress,
+              CustomerPhone: d.BuyerInvoice.BuyerPhoneNumber,
+              CustomerIDNumber: d.BuyerInvoice.BuyerIdNumber,
+            });
             this.detail.set(d);
 
             const listItem = d.ListInvoiceItems.map((item) => ({
@@ -107,6 +106,7 @@ export class ReportDetail implements OnInit {
               AmountVATOC: (item.VatAmountOC ?? 0) + (item.AmountWithoutVATOC ?? 0),
             }));
             this.items.set(listItem || []);
+            this.listItems.set(listItem || []);
 
             this.totalDiscount.set(
               d.ListInvoiceItems.reduce(
@@ -124,6 +124,34 @@ export class ReportDetail implements OnInit {
           this.loading.set(false);
         }
       });
+  }
+  addRow() {
+    this.items.update(prev => [...prev, {}])
+  }
+  onChangeInvoice(event: { field: string; value: any; row: number }) {
+    const { field, value, row } = event;
+
+    this.listItems.update(prev => {
+      const clone = [...prev];
+      clone[row] = { ...clone[row], [field]: value };
+      return clone;
+    });
+
+    console.log('Updated items:', this.items());
+  }
+  submitForm() {
+    this.invoiceForm.patchValue({
+
+    })
+  }
+
+
+  startEdit(field: string) {
+    this.editingField.set(field);
+  }
+
+  stopEdit() {
+    this.editingField.set(null);
   }
   private buildSummaryTable(d: IInvoiceDetail): void {
     const items = d.ListInvoiceItems ?? [];

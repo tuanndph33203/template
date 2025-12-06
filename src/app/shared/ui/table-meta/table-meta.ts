@@ -11,7 +11,8 @@ import { ToggleButton } from 'primeng/togglebutton';
 import { TruncatePipe } from '@app/shared/pipes/truncate-pipe';
 import { Menu } from 'primeng/menu';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-
+import { InputNumber, InputNumberInputEvent } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
 @Component({
   selector: 'app-table-meta',
   imports: [
@@ -27,6 +28,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     TruncatePipe,
     Menu,
     ScrollingModule,
+    InputNumber,
+    InputTextModule
   ],
   templateUrl: './table-meta.html',
   styleUrl: './table-meta.scss',
@@ -53,12 +56,14 @@ export class TableMeta implements OnInit {
 
   actionClick = output<ITableActionEvent>();
   actionLazyload = output<any>();
+  actionChangeInput = output<{ value: string | number, field: string, row: number }>();
   actionRefresh = output();
   actionFrozen = signal<boolean>(false);
   formModelColumn: any = {};
   formSubmitted: boolean = false;
   selectedRows: any[] = [];
   allSelected = false;
+  editingCell = signal<{ rowIndex: number; field: string } | null>(null);
 
   ngOnInit() {
     this.columns().forEach((col) => {
@@ -125,6 +130,27 @@ export class TableMeta implements OnInit {
 
   onRefresh() {
     this.actionRefresh.emit();
+  }
+
+
+  startEdit(rowIndex: number, field: string) {
+    this.editingCell.set({ rowIndex, field })
+  }
+
+  stopEdit() {
+    this.editingCell.set(null)
+  }
+
+  onTextChange(event: Event, field: string, row: number): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.actionChangeInput.emit({ field, value, row })
+
+  }
+
+  onNumberChange(event: InputNumberInputEvent, field: string, row: number): void {
+    const value = event.value ?? '';
+    this.actionChangeInput.emit({ field, value, row })
+
   }
 
   toggleMenu(event: MouseEvent, popover: any) {

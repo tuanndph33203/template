@@ -129,12 +129,43 @@
                     width: item.width,
                   }"
                   pTooltip="{{ item.tooltip && data[item.tooltipField ?? ''] }}"
-                  [ngClass]="item.align ? '!text' + item.align : '!text-left'"
+                  [ngClass]="[
+                    item.align ? '!text-' + item.align : '!text-left',
+                    item.edition &&
+                    editingCell()?.rowIndex === rowIndex &&
+                    editingCell()?.field === item.field
+                      ? '!p-0'
+                      : '',
+                  ]"
                   tooltipPosition="top"
+                  (dblclick)="item.edition && startEdit(rowIndex, item.field)"
                 >
-                  <span [ngClass]="item.lineClamp ? 'line-clamp-' + item.lineClamp : ''">{{
-                    data[item.field] | truncate: item.truncate
-                  }}</span>
+                  @if (
+                    !(
+                      item.edition &&
+                      editingCell()?.rowIndex === rowIndex &&
+                      editingCell()?.field === item.field
+                    ) || !item.edition
+                  ) {
+                    <span [ngClass]="item.lineClamp ? 'line-clamp-' + item.lineClamp : ''">{{
+                      data[item.field] | truncate: item.truncate
+                    }}</span>
+                  }
+
+                  @if (
+                    item.edition &&
+                    editingCell()?.rowIndex === rowIndex &&
+                    editingCell()?.field === item.field
+                  ) {
+                    <input
+                      pInputText
+                      autofocus
+                      inputStyleClass="bg-transparent outline-none border-none shadow-none"
+                      [(ngModel)]="data[item.field]"
+                      (input)="onTextChange($event, item.field, rowIndex)"
+                      (onBlur)="stopEdit()"
+                    />
+                  }
                 </td>
               }
               @case ('image') {
@@ -174,9 +205,43 @@
                     maxWidth: item.maxWidth,
                     width: item.width,
                   }"
-                  [ngClass]="item.align ? '!text' + item.align : '!text-left'"
+                  (dblclick)="item.edition ? startEdit(rowIndex, item.field) : ''"
+                  [ngClass]="[
+                    item.align ? '!text-' + item.align : '!text-left',
+                    item.edition &&
+                    editingCell()?.rowIndex === rowIndex &&
+                    editingCell()?.field === item.field
+                      ? '!p-0'
+                      : '',
+                  ]"
                 >
-                  <span>{{ data[item.field] | currency: 'VND' }}</span>
+                  @if (
+                    !(
+                      item.edition &&
+                      editingCell()?.rowIndex === rowIndex &&
+                      editingCell()?.field === item.field
+                    ) || !item.edition
+                  ) {
+                    <span>{{ data[item.field] | currency: 'VND' }}</span>
+                  }
+
+                  @if (
+                    item.edition &&
+                    editingCell()?.rowIndex === rowIndex &&
+                    editingCell()?.field === item.field
+                  ) {
+                    <p-inputnumber
+                      autofocus
+                      inputStyleClass="bg-transparent outline-none border-none shadow-none"
+                      [(ngModel)]="data[item.field]"
+                      [prefix]="item.inputConfig?.prefix"
+                      [suffix]="item.inputConfig?.suffix"
+                      [min]="item.inputConfig?.min"
+                      [max]="item.inputConfig?.max"
+                      (onBlur)="stopEdit()"
+                      (onInput)="onNumberChange($event, item.field, rowIndex)"
+                    />
+                  }
                 </td>
               }
               @case ('date') {
@@ -191,16 +256,56 @@
                   <span>{{ data[item.field] | date: 'dd/MM/yyyy' }}</span>
                 </td>
               }
-              @case ('input') {
+              @case ('number') {
                 <td
                   [style]="{
                     minWidth: item.minWidth,
                     maxWidth: item.maxWidth,
                     width: item.width,
                   }"
-                  [ngClass]="item.align ? '!text-' + item.align : '!text-left'"
+                  (dblclick)="item.edition ? startEdit(rowIndex, item.field) : ''"
+                  [ngClass]="[
+                    item.align ? '!text-' + item.align : '!text-left',
+                    item.edition &&
+                    editingCell()?.rowIndex === rowIndex &&
+                    editingCell()?.field === item.field
+                      ? '!p-0'
+                      : '',
+                  ]"
                 >
-                  <input [value]="data[item.field]" type="text" />
+                  @if (
+                    (!(
+                      item.edition &&
+                      editingCell()?.rowIndex === rowIndex &&
+                      editingCell()?.field === item.field
+                    ) ||
+                      !item.edition) &&
+                    data[item.field]
+                  ) {
+                    {{ item.inputConfig?.prefix }}
+                    <span>{{ data[item.field] }}</span>
+                    {{ item.inputConfig?.suffix }}
+                  }
+
+                  @if (
+                    item.edition &&
+                    editingCell()?.rowIndex === rowIndex &&
+                    editingCell()?.field === item.field
+                  ) {
+                    <p-inputnumber
+                      autofocus
+                      inputStyleClass="bg-transparent outline-none border-none shadow-none"
+                      mode="decimal"
+                      [useGrouping]="false"
+                      [(ngModel)]="data[item.field]"
+                      [prefix]="item.inputConfig?.prefix"
+                      [suffix]="item.inputConfig?.suffix"
+                      [min]="item.inputConfig?.min"
+                      [max]="item.inputConfig?.max"
+                      (onBlur)="stopEdit()"
+                      (onInput)="onNumberChange($event, item.field, rowIndex)"
+                    />
+                  }
                 </td>
               }
               @case ('action') {

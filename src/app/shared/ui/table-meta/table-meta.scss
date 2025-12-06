@@ -13,16 +13,26 @@
       padding: 6px;
     }
   }
+  input {
+    font-size: 12px;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    outline: none;
+    border: none;
+    border-radius: 0;
+  }
+  // .p-inputnumber {
+  //   .p-inputtext:enabled:focus {
+  //     text-decoration: underline;
+  //     border-color: transparent !important;
+  //     box-shadow: none !important;
+  //     outline: none !important;
+  //   }
+  // }
 }
 ::ng-deep {
   .p-tooltip {
     font-size: 12px;
   }
-}
-input {
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  outline: none;
-  border: none;
 }

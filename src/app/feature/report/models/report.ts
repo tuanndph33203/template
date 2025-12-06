@@ -65,24 +65,24 @@ export interface IBuyerInvoice {
 }
 
 export interface IInvoiceItem {
-  ItemType: number;
-  SortOrder: number;
-  LineNumber: number;
-  ItemCode: string;
-  ItemName: string;
-  UnitName: string;
-  Quantity: number;
-  UnitPrice: number;
-  AmountOC: number;
-  Amount: number;
-  DiscountRate: number;
-  DiscountAmountOC: number;
-  DiscountAmount: number;
-  AmountWithoutVATOC: number;
-  AmountWithoutVAT: number;
-  VatRateName: string;
-  VatAmountOC: number;
-  VatAmount: number;
+  ItemType?: number;
+  SortOrder?: number;
+  LineNumber?: number;
+  ItemCode?: string;
+  ItemName?: string;
+  UnitName?: string;
+  Quantity?: number;
+  UnitPrice?: number;
+  AmountOC?: number;
+  Amount?: number;
+  DiscountRate?: number;
+  DiscountAmountOC?: number;
+  DiscountAmount?: number;
+  AmountWithoutVATOC?: number;
+  AmountWithoutVAT?: number;
+  VatRateName?: string;
+  VatAmountOC?: number;
+  VatAmount?: number;
 }
 
 export interface ITaxRate {

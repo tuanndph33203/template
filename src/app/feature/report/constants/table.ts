@@ -1,7 +1,7 @@
 import { ITableConfig } from '@app/core/models/common';
 import { InvoiceStatus, InvoiceStatusLabel } from './report';
 
-export const TABLE_COLUMNS: ITableConfig[] = [
+export const colsTempList: ITableConfig[] = [
   { label: 'STT', field: 'Index', type: 'index', minWidth: '40px', align: 'center' },
 
   { label: 'Ngày', field: 'DocumentDate', type: 'text', minWidth: '90px' },
@@ -84,11 +84,135 @@ export const TABLE_COLUMNS: ITableConfig[] = [
         visible: (v) => v.Status === 1,
       },
       {
-        icon: 'pi pi-download',
-        tooltipLabel: 'Tải xuống',
-        type: 'download',
-        visible: (v) => v.Status === 1,
+        icon: 'pi pi-file-edit',
+        tooltipLabel: 'Chỉnh sửa',
+        type: 'edit',
+        visible: (v) => v.Status === 4,
       },
     ],
+  },
+];
+
+export const colsTempDetail: ITableConfig[] = [
+  { label: 'STT', field: 'index', type: 'index', align: 'center', minWidth: '30px' },
+
+  {
+    label: 'Tên hàng hóa, dịch vụ',
+    field: 'ItemName',
+    type: 'text',
+    truncate: 25,
+    tooltip: true,
+    tooltipField: 'ItemName',
+    minWidth: '150px'
+  },
+
+  { label: 'DVT', field: 'LineNumber', type: 'text', minWidth: '40px', align: 'center' },
+
+  { label: 'Số lượng', field: 'Quantity', type: 'text', align: 'right', minWidth: '40px' },
+
+  {
+    label: 'Đơn giá trước chiết khấu',
+    field: 'UnitPrice',
+    type: 'currency',
+    align: 'right',
+    minWidth: '120px',
+  },
+
+  {
+    label: 'Thành tiền',
+    field: 'AmountWithoutVATOC',
+    type: 'currency',
+    align: 'right',
+    minWidth: '120px',
+  },
+
+  { label: 'Thuế suất GTGT', field: 'VatRateName', type: 'text', minWidth: '70px' },
+
+  {
+    label: 'Tiền thuế GTGT',
+    field: 'VatAmountOC',
+    type: 'currency',
+    align: 'right',
+    minWidth: '120px',
+  },
+];
+
+export const colsTempEdit: ITableConfig[] = [
+  { label: 'STT', field: 'index', type: 'index', align: 'center', minWidth: '30px' },
+
+  {
+    label: 'Tên hàng hóa, dịch vụ',
+    field: 'ItemName',
+    type: 'text',
+    truncate: 25,
+    tooltip: true,
+    tooltipField: 'ItemName',
+    minWidth: '150px',
+    edition: true
+  },
+
+  { label: 'DVT', field: 'LineNumber', type: 'text', minWidth: '40px', align: 'center', edition: true },
+
+  { label: 'Số lượng', field: 'Quantity', type: 'number', align: 'right', minWidth: '40px', edition: true },
+
+  {
+    label: 'Đơn giá trước chiết khấu',
+    field: 'UnitPrice',
+    type: 'currency',
+    align: 'right',
+    minWidth: '120px',
+    inputConfig: { suffix: 'đ' },
+    edition: true
+  },
+
+  {
+    label: 'Thành tiền',
+    field: 'AmountWithoutVATOC',
+    type: 'currency',
+    align: 'right',
+    minWidth: '120px',
+    inputConfig: { suffix: 'đ' },
+    edition: true
+  },
+
+  {
+    label: 'Thuế suất GTGT', field: 'VatRateName', type: 'number', minWidth: '70px', inputConfig: { suffix: '%' },
+    edition: true
+  },
+
+  {
+    label: 'Tiền thuế GTGT',
+    field: 'VatAmountOC',
+    type: 'currency',
+    align: 'right',
+    minWidth: '120px',
+    inputConfig: { suffix: 'đ' },
+    edition: true
+  },
+];
+
+
+export const colsTempSummary: ITableConfig[] = [
+  { label: 'Tổng hợp', field: 'title', type: 'text' },
+
+  {
+    label: 'Thành tiền trước thuế GTGT',
+    field: 'AmountWithoutVATOC',
+    type: 'text',
+    align: 'right',
+  },
+
+  {
+    label: 'Tiền thuế GTGT',
+    field: 'VatAmountOC',
+    type: 'currency',
+    align: 'right',
+  },
+
+  {
+    label: 'Cộng tiền thanh toán',
+    field: 'TotalPayment',
+    type: 'currency',
+    align: 'right',
   },
 ];
