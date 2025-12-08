@@ -11,21 +11,28 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { IInvoiceDetail, IInvoiceItem } from '../../models/report';
 import { colsTempDetail, colsTempEdit, colsTempSummary } from '../../constants/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { Loading } from "@app/shared/ui/loading/loading";
-import { InputText } from 'primeng/inputtext';
+import { Loading } from '@app/shared/ui/loading/loading';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, TableMeta, NumberToVietnamesePipe, TooltipModule, Loading, InputText, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    TableModule,
+    ButtonModule,
+    TableMeta,
+    NumberToVietnamesePipe,
+    TooltipModule,
+    Loading,
+    ReactiveFormsModule,
+  ],
   templateUrl: './report-detail.html',
   styleUrl: './report-detail.scss',
 })
 export class ReportDetail implements OnInit {
-
-  colsTempSummary: ITableConfig[] = colsTempSummary
-  colsTemp = signal<ITableConfig[]>([])
+  colsTempSummary: ITableConfig[] = colsTempSummary;
+  colsTemp = signal<ITableConfig[]>([]);
 
   loading = signal(true);
   detail = signal<IInvoiceDetail | null>(null);
@@ -48,14 +55,12 @@ export class ReportDetail implements OnInit {
     CustomerCompanyName: new FormControl(''),
     CustomerTaxCode: new FormControl(''),
     CustomerAddress: new FormControl('', Validators.required),
-    CustomerPhone: new FormControl(
-      '',
-      [Validators.required, Validators.pattern(/^[0-9]{9,11}$/)]
-    ),
-    CustomerIDNumber: new FormControl(
-      '',
-      [Validators.required, Validators.minLength(9), Validators.maxLength(12)]
-    ),
+    CustomerPhone: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{9,11}$/)]),
+    CustomerIDNumber: new FormControl('', [
+      Validators.required,
+      Validators.minLength(9),
+      Validators.maxLength(12),
+    ]),
     Products: new FormArray<FormGroup>([], Validators.required),
   });
 
@@ -64,74 +69,71 @@ export class ReportDetail implements OnInit {
   sanitizer = inject(DomSanitizer);
 
   ngOnInit(): void {
-    this.getInvoice()
+    this.getInvoice();
     if (this.config.data.edition) {
-      this.edition.set(true)
-      this.colsTemp.set(colsTempEdit)
+      this.edition.set(true);
+      this.colsTemp.set(colsTempEdit);
     } else {
-      this.colsTemp.set(colsTempDetail)
+      this.colsTemp.set(colsTempDetail);
     }
-
   }
   getInvoice() {
-    this.service
-      .getDetailInvoice(this.config.data.id)
-      .subscribe({
-        next: (res) => {
-          if (res.Code === 200) {
-            if (res.Data.IsHaveInoiveFile) {
-              this.showPDF.set(true);
-              this.urlFileInvoice.set(
-                this.sanitizer.bypassSecurityTrustResourceUrl(res.Data.UrlFileInvoice) ?? '',
-              );
-              return;
-            }
-
-
-            const d: IInvoiceDetail = res.Data;
-            this.invoiceForm.patchValue({
-              Type: 1,
-              RefId: d.RefId,
-              CustomerName: d.BuyerInvoice.BuyerFullName,
-              CustomerCompanyName: d.BuyerInvoice.BuyerLegalName,
-              CustomerTaxCode: d.BuyerInvoice.BuyerTaxCode,
-              CustomerAddress: d.BuyerInvoice.BuyerAddress,
-              CustomerPhone: d.BuyerInvoice.BuyerPhoneNumber,
-              CustomerIDNumber: d.BuyerInvoice.BuyerIdNumber,
-            });
-            this.detail.set(d);
-
-            const listItem = d.ListInvoiceItems.map((item) => ({
-              ...item,
-              AmountVATOC: (item.VatAmountOC ?? 0) + (item.AmountWithoutVATOC ?? 0),
-            }));
-            this.items.set(listItem || []);
-            this.listItems.set(listItem || []);
-
-            this.totalDiscount.set(
-              d.ListInvoiceItems.reduce(
-                (sum: number, item: IInvoiceItem) => sum + (item.DiscountAmountOC ?? 0),
-                0,
-              ),
+    this.service.getDetailInvoice(this.config.data.id).subscribe({
+      next: (res) => {
+        if (res.Code === 200) {
+          if (res.Data.IsHaveInoiveFile) {
+            this.showPDF.set(true);
+            this.urlFileInvoice.set(
+              this.sanitizer.bypassSecurityTrustResourceUrl(res.Data.UrlFileInvoice) ?? '',
             );
-
-            this.buildSummaryTable(d);
+            return;
           }
-        }, error: () => {
-          this.loading.set(false);
-        },
-        complete: () => {
-          this.loading.set(false);
+
+          const d: IInvoiceDetail = res.Data;
+          this.invoiceForm.patchValue({
+            Type: 1,
+            RefId: d.RefId,
+            CustomerName: d.BuyerInvoice.BuyerFullName,
+            CustomerCompanyName: d.BuyerInvoice.BuyerLegalName,
+            CustomerTaxCode: d.BuyerInvoice.BuyerTaxCode,
+            CustomerAddress: d.BuyerInvoice.BuyerAddress,
+            CustomerPhone: d.BuyerInvoice.BuyerPhoneNumber,
+            CustomerIDNumber: d.BuyerInvoice.BuyerIdNumber,
+          });
+          this.detail.set(d);
+
+          const listItem = d.ListInvoiceItems.map((item) => ({
+            ...item,
+            AmountVATOC: (item.VatAmountOC ?? 0) + (item.AmountWithoutVATOC ?? 0),
+          }));
+          this.items.set(listItem || []);
+          this.listItems.set(listItem || []);
+
+          this.totalDiscount.set(
+            d.ListInvoiceItems.reduce(
+              (sum: number, item: IInvoiceItem) => sum + (item.DiscountAmountOC ?? 0),
+              0,
+            ),
+          );
+
+          this.buildSummaryTable(d);
         }
-      });
+      },
+      error: () => {
+        this.loading.set(false);
+      },
+      complete: () => {
+        this.loading.set(false);
+      },
+    });
   }
   addRow() {
-    this.items.update(prev => [...prev, {}])
+    this.items.update((prev) => [...prev, {}]);
   }
   onChangeInvoice(event: { field: string; value: any; row: number }) {
     const { field, value, row } = event;
 
-    this.listItems.update(prev => {
+    this.listItems.update((prev) => {
       const clone = [...prev];
       clone[row] = { ...clone[row], [field]: value };
       return clone;
@@ -140,11 +142,8 @@ export class ReportDetail implements OnInit {
     console.log('Updated items:', this.items());
   }
   submitForm() {
-    this.invoiceForm.patchValue({
-
-    })
+    this.invoiceForm.patchValue({});
   }
-
 
   startEdit(field: string) {
     this.editingField.set(field);

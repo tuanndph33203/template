@@ -25,7 +25,20 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./feature/report/pages/report-list/report-list').then((c) => c.ReportList),
+        loadComponent: () =>
+          import('./feature/report/pages/report-list/report-list').then((c) => c.ReportList),
+      },
+      {
+        path: 'employee',
+        loadComponent: () =>
+          import('./feature/employee/pages/employee-list/employee-list').then(
+            (c) => c.EmployeeList,
+          ),
+      },
+      {
+        path: 'product',
+        loadComponent: () =>
+          import('./feature/product/pages/product-list/product-list').then((c) => c.ProductList),
       },
     ],
   },

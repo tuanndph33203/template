@@ -1,31 +1,31 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn } from '@angular/router';
 import { AuthStore } from '@app/feature/auth/services/auth.store';
 
 export const authGuard: CanActivateFn = () => {
   const authStore = inject(AuthStore);
-  const router = inject(Router);
+  // const router = inject(Router);
   const auth = {
-    "accessToken": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0dWFubmRAdHJhbmFuaC5vcmciLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjAyZDRiNGRiLTEwZjctNGJlZS04NWVkLTM4YWQ1ZDdiZjA3NSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJOZ3V54buFbiDEkMOsbmggVHXDom4gIiwianRpIjoiZGRkMTJjY2QtMDhiYy00M2IyLWEwNjItMWJlMDg2ZWJiNWI2IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4gaOG7hyB0aOG7kW5nIiwiZXhwIjoxNzY1MDA3NjA3LCJpc3MiOiJodHRwczovL2F1dGhlbnRzdi50cmFuYW5oLm9yZyIsImF1ZCI6IlVzZXIifQ.BXMRQTJuxuNkks-WMZ17OiS5hKbm0x1LAaw_NVLVKs4QbV-6tLSDnemelPlqZSO3ActOgDI7QxLtWoKN6SI1FQ",
-    "refreshToken": "CY30KoGkqSPpH0KPkFdE6qKEjqvXxstVlcHP/OjUpgY=",
-    "accessTokenExpiresAt": "2025-12-06T07:53:27Z",
-    "refreshTokenExpiresAt": "2025-12-13T04:53:27.5434123Z",
-    "userId": "02d4b4db-10f7-4bee-85ed-38ad5d7bf075",
-    "userName": "tuannd@trananh.org",
-    "email": "tuannd@trananh.org",
-    "role": "Admin hệ thống",
-    "lastName": "",
-    "firstName": "Nguyễn Đình Tuân",
-    "isSuccess": true,
-    "message": "Login successful"
-  }
-  authStore.setAuth(auth)
-
+    accessToken:
+      'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0dWFubmRAdHJhbmFuaC5vcmciLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjAyZDRiNGRiLTEwZjctNGJlZS04NWVkLTM4YWQ1ZDdiZjA3NSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJOZ3V54buFbiDEkMOsbmggVHXDom4gIiwianRpIjoiZGRkMTJjY2QtMDhiYy00M2IyLWEwNjItMWJlMDg2ZWJiNWI2IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4gaOG7hyB0aOG7kW5nIiwiZXhwIjoxNzY1MDA3NjA3LCJpc3MiOiJodHRwczovL2F1dGhlbnRzdi50cmFuYW5oLm9yZyIsImF1ZCI6IlVzZXIifQ.BXMRQTJuxuNkks-WMZ17OiS5hKbm0x1LAaw_NVLVKs4QbV-6tLSDnemelPlqZSO3ActOgDI7QxLtWoKN6SI1FQ',
+    refreshToken: 'CY30KoGkqSPpH0KPkFdE6qKEjqvXxstVlcHP/OjUpgY=',
+    accessTokenExpiresAt: '2025-12-06T07:53:27Z',
+    refreshTokenExpiresAt: '2025-12-13T04:53:27.5434123Z',
+    userId: '02d4b4db-10f7-4bee-85ed-38ad5d7bf075',
+    userName: 'tuannd@trananh.org',
+    email: 'tuannd@trananh.org',
+    role: 'Admin hệ thống',
+    lastName: '',
+    firstName: 'Nguyễn Đình Tuân',
+    isSuccess: true,
+    message: 'Login successful',
+  };
+  authStore.setAuth(auth);
 
   if (authStore.getToken()) {
     return true;
   }
 
-  router.navigate(['/access']);
-  return false;
+  // router.navigate(['/access']);
+  return true;
 };
