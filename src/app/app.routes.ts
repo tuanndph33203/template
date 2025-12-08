@@ -40,6 +40,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./feature/product/pages/product-list/product-list').then((c) => c.ProductList),
       },
+      {
+        path: 'branch',
+        loadComponent: () =>
+          import('./feature/branch/pages/branch-list/branch-list').then((c) => c.BranchList),
+      },
     ],
   },
   {

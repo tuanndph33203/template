@@ -33,6 +33,11 @@ export class Sidebar {
       label: 'Nhân Viên',
       link: '/dashboard/employee',
     },
+    {
+      icon: 'pi pi-shop',
+      label: 'Chi nhánh',
+      link: '/dashboard/employee',
+    },
   ];
   router = inject(Router);
   onSidebarToggle() {

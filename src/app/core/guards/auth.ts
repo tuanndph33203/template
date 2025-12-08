@@ -7,16 +7,16 @@ export const authGuard: CanActivateFn = () => {
   // const router = inject(Router);
   const auth = {
     accessToken:
-      'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0dWFubmRAdHJhbmFuaC5vcmciLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjAyZDRiNGRiLTEwZjctNGJlZS04NWVkLTM4YWQ1ZDdiZjA3NSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJOZ3V54buFbiDEkMOsbmggVHXDom4gIiwianRpIjoiZGRkMTJjY2QtMDhiYy00M2IyLWEwNjItMWJlMDg2ZWJiNWI2IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4gaOG7hyB0aOG7kW5nIiwiZXhwIjoxNzY1MDA3NjA3LCJpc3MiOiJodHRwczovL2F1dGhlbnRzdi50cmFuYW5oLm9yZyIsImF1ZCI6IlVzZXIifQ.BXMRQTJuxuNkks-WMZ17OiS5hKbm0x1LAaw_NVLVKs4QbV-6tLSDnemelPlqZSO3ActOgDI7QxLtWoKN6SI1FQ',
-    refreshToken: 'CY30KoGkqSPpH0KPkFdE6qKEjqvXxstVlcHP/OjUpgY=',
-    accessTokenExpiresAt: '2025-12-06T07:53:27Z',
-    refreshTokenExpiresAt: '2025-12-13T04:53:27.5434123Z',
-    userId: '02d4b4db-10f7-4bee-85ed-38ad5d7bf075',
-    userName: 'tuannd@trananh.org',
-    email: 'tuannd@trananh.org',
+      'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJkdW5nbnQxQHRyYW5hbmgub3JnIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIyMTVjNWY0Mi1lZGNlLTQyM2ItYmUxYS0yMTk1MWZiNjI2YjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTmd1eeG7hW4gVGnhur9uIETFqW5nICAiLCJqdGkiOiI4ZWM1MDQ5Mi0wNWYzLTRmNjYtOWM5Ni01YzJiYmVmYzkxNTkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiBo4buHIHRo4buRbmciLCJleHAiOjE3NjUyMTU4NzcsImlzcyI6Imh0dHBzOi8vYXV0aGVudHN2LnRyYW5hbmgub3JnIiwiYXVkIjoiVXNlciJ9.twUlDS642U9l1okqJHMCKh4EAUOaTS2ZGCwNBGu9P4mN9INIsh7dpzBnkB1BT76FhrnQywG51z0M7wTRZLPzOA',
+    refreshToken: 'V92PIxsW7WpX097JVFRdhKGS22/dW1CXIcsAfxEeSiI=',
+    accessTokenExpiresAt: '2025-12-08T17:44:37Z',
+    refreshTokenExpiresAt: '2025-12-15T14:44:37.9264925Z',
+    userId: '215c5f42-edce-423b-be1a-21951fb626b0',
+    userName: 'dungnt1@trananh.org',
+    email: 'dungnt1@trananh.org',
     role: 'Admin hệ thống',
     lastName: '',
-    firstName: 'Nguyễn Đình Tuân',
+    firstName: 'Nguyễn Tiến Dũng ',
     isSuccess: true,
     message: 'Login successful',
   };
