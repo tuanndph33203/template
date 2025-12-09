@@ -1,47 +1,37 @@
-<p-table
-  [value]="invoiceItems()"
-  stripedRows
-  showGridlines
-  [tableStyle]="{ 'min-width': '100%' }"
-  styleClass="text-xs"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th class="text-center" [style]="{ minWidth: '30px', maxWidth: '30px', width: '30px' }">
-        STT
-      </th>
-      <th
-        [style]="{
-          minWidth: '130px',
-          maxWidth: '170px',
-          width: '170px',
-        }"
-      >
-        Tên hàng hóa, dịch vụ
-      </th>
-      <th class="text-center" [style]="{ minWidth: '40px', maxWidth: '60px', width: '60px' }">
-        DVT
-      </th>
-      <th class="text-right" [style]="{ minWidth: '40px', maxWidth: '80px', width: '80px' }">
-        Số lượng
-      </th>
+<table class="text-xs border border-collapse w-full">
+  <tr class="*:border-r *:text-center *:font-medium">
+    <th class="text-center" [style]="{ minWidth: '30px', maxWidth: '30px', width: '30px' }">STT</th>
+    <th
+      [style]="{
+        minWidth: '130px',
+        maxWidth: '170px',
+        width: '170px',
+      }"
+    >
+      Tên hàng hóa, dịch vụ
+    </th>
+    <th class="text-center" [style]="{ minWidth: '40px', maxWidth: '60px', width: '60px' }">
+      Đơn vị tính
+    </th>
+    <th class="text-right" [style]="{ minWidth: '40px', maxWidth: '80px', width: '80px' }">
+      Số lượng
+    </th>
 
-      <th class="text-right" [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }">
-        Đơn giá trước CK
-      </th>
-      <th class="text-right" [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }">
-        Thành tiền
-      </th>
-      <th class="text-right" [style]="{ minWidth: '70px', maxWidth: '120px', width: '120px' }">
-        Thuế suất (%)
-      </th>
-      <th class="text-right" [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }">
-        Tiền thuế
-      </th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
-    <tr>
+    <th class="text-right" [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }">
+      Đơn giá
+    </th>
+    <th class="text-right" [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }">
+      Thành tiền
+    </th>
+    <th class="text-right" [style]="{ minWidth: '70px', maxWidth: '120px', width: '120px' }">
+      Thuế suất GTGT
+    </th>
+    <th class="text-right" [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }">
+      Tiền thuế GTGT
+    </th>
+  </tr>
+  @for (item of invoiceItems(); track $index; let rowIndex = $index) {
+    <tr class="*:text-center">
       <td
         class="text-center border"
         [style]="{ minWidth: '30px', maxWidth: '30px', width: '30px' }"
@@ -49,40 +39,32 @@
         {{ rowIndex + 1 }}
       </td>
       <td
-        class="border px-2"
-        (dblclick)="startEdit(rowIndex, 'ItemCode')"
-        [ngClass]="isEditing(rowIndex, 'ItemCode') ? '!p-0' : ''"
+        class="border !p-0"
         [style]="{ minWidth: '130px', maxWidth: '170px', width: '170px' }"
+        (dblclick)="startEdit(rowIndex, 'ItemName')"
+        [ngClass]="isEditing(rowIndex, 'ItemName') ? '!p-0' : ''"
       >
-        @if (!isEditing(rowIndex, 'ItemCode')) {
-          <span>{{ item.ItemCode }}</span>
+        @if (!isEditing(rowIndex, 'ItemName')) {
+          <span class="px-[1px] line-clamp-2" [pTooltip]="item.ItemName">
+            {{ item.ItemName }}
+          </span>
         } @else {
-          <input
-            pInputText
-            autofocus
-            class="w-full bg-transparent"
-            [(ngModel)]="item.ItemCode"
+          <p-autocomplete
+            optionLabel="Name"
+            optionValue="Code"
+            [(ngModel)]="item.ItemName"
+            [suggestions]="filteredProducts()"
+            (completeMethod)="filterProduct($event)"
+            (onSelect)="onNameChange(rowIndex, item.Quantity, $event.value); stopEdit()"
             (blur)="stopEdit()"
           />
         }
       </td>
       <td
         class="border px-2 text-center"
-        (dblclick)="startEdit(rowIndex, 'LineNumber')"
-        [ngClass]="isEditing(rowIndex, 'LineNumber') ? '!p-0' : ''"
         [style]="{ minWidth: '40px', maxWidth: '60px', width: '60px' }"
       >
-        @if (!isEditing(rowIndex, 'LineNumber')) {
-          {{ item.LineNumber }}
-        } @else {
-          <input
-            pInputText
-            autofocus
-            class="w-full text-center bg-transparent"
-            [(ngModel)]="item.LineNumber"
-            (blur)="stopEdit()"
-          />
-        }
+        {{ item.UnitName }}
       </td>
       <td
         class="border px-2 text-right"
@@ -98,90 +80,40 @@
             class="w-full"
             [(ngModel)]="item.Quantity"
             [useGrouping]="false"
-            (onInput)="onVatChange(rowIndex, $event.value)"
+            (onInput)="onNumberChange(rowIndex, $event.value, 'Quantity')"
             (onBlur)="stopEdit()"
           />
         }
       </td>
       <td
         class="border px-2 text-right"
-        (dblclick)="startEdit(rowIndex, 'UnitPrice')"
-        [ngClass]="isEditing(rowIndex, 'UnitPrice') ? '!p-0' : ''"
         [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }"
       >
-        @if (!isEditing(rowIndex, 'UnitPrice')) {
-          {{ item.UnitPrice | currency: 'VND' }}
-        } @else {
-          <p-input-number
-            autofocus
-            class="w-full"
-            [(ngModel)]="item.UnitPrice"
-            suffix=" đ"
-            (onInput)="onVatChange(rowIndex, $event.value)"
-            (onBlur)="stopEdit()"
-          />
-        }
+        <span> {{ item.UnitPrice | currency: 'VND' }}</span>
       </td>
       <td
         class="border px-2 text-right"
-        (dblclick)="startEdit(rowIndex, 'AmountWithoutVATOC')"
-        [ngClass]="isEditing(rowIndex, 'AmountWithoutVATOC') ? '!p-0' : ''"
         [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }"
       >
-        @if (!isEditing(rowIndex, 'AmountWithoutVATOC')) {
+        <span>
           {{ item.AmountWithoutVATOC | currency: 'VND' }}
-        } @else {
-          <p-input-number
-            autofocus
-            class="w-full"
-            [(ngModel)]="item.AmountWithoutVATOC"
-            suffix=" đ"
-            [useGrouping]="true"
-            (onInput)="onVatChange(rowIndex, $event.value)"
-            (onBlur)="stopEdit()"
-          />
-        }
+        </span>
       </td>
 
       <td
         class="border px-2 text-right"
-        (dblclick)="startEdit(rowIndex, 'VatRateName')"
-        [ngClass]="isEditing(rowIndex, 'VatRateName') ? '!p-0' : ''"
         [style]="{ minWidth: '70px', maxWidth: '120px', width: '120px' }"
       >
-        @if (!isEditing(rowIndex, 'VatRateName')) {
-          {{ item.VatRateName }} %
-        } @else {
-          <p-input-number
-            autofocus
-            class="w-full"
-            [(ngModel)]="item.VatRateName"
-            suffix=" %"
-            [useGrouping]="false"
-            (onInput)="onVatChange(rowIndex, $event.value)"
-            (onBlur)="stopEdit()"
-          />
-        }
+        <span> {{ item.VatRateName }}</span>
       </td>
       <td
         class="border px-2 text-right"
-        (dblclick)="startEdit(rowIndex, 'VatAmountOC')"
-        [ngClass]="isEditing(rowIndex, 'VatAmountOC') ? '!p-0' : ''"
         [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }"
       >
-        @if (!isEditing(rowIndex, 'VatAmountOC')) {
+        <span>
           {{ item.VatAmountOC | currency: 'VND' }}
-        } @else {
-          <p-input-number
-            autofocus
-            class="w-full"
-            [(ngModel)]="item.VatAmountOC"
-            suffix=" đ"
-            [useGrouping]="true"
-            (onBlur)="stopEdit()"
-          />
-        }
+        </span>
       </td>
     </tr>
-  </ng-template>
-</p-table>
+  }
+</table>

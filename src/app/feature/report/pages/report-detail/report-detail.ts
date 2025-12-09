@@ -14,6 +14,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Loading } from '@app/shared/ui/loading/loading';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TableReportDetail } from '../../components/table-report-detail/table-report-detail';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-report-detail',
@@ -39,6 +40,7 @@ export class ReportDetail implements OnInit {
   loading = signal(true);
   detail = signal<IInvoiceDetail | null>(null);
   items = signal<IInvoiceItem[]>([]);
+  products = signal<any[]>([]);
 
   totalDiscount = signal(0);
   grandTotal = signal(0);
@@ -52,31 +54,47 @@ export class ReportDetail implements OnInit {
   editingField = signal<string | null>(null);
 
   invoiceForm = new FormGroup({
-    Type: new FormControl(1, Validators.required),
-    RefId: new FormControl('', Validators.required),
-    CustomerName: new FormControl('', Validators.required),
+    Type: new FormControl(0),
+    RefId: new FormControl(''),
+    CustomerName: new FormControl(''),
     CustomerCompanyName: new FormControl(''),
     CustomerTaxCode: new FormControl(''),
-    CustomerAddress: new FormControl('', Validators.required),
-    CustomerPhone: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{9,11}$/)]),
+    CustomerAddress: new FormControl(''),
+    CustomerPhone: new FormControl('', [Validators.pattern(/^[0-9]{9,11}$/)]),
     CustomerIDNumber: new FormControl('', [
-      Validators.required,
       Validators.minLength(9),
       Validators.maxLength(12),
     ]),
-    Products: new FormArray<FormGroup>([], Validators.required),
+    Products: new FormArray<FormGroup>([]),
   });
 
   config = inject(DynamicDialogConfig);
   service = inject(ReportService);
   sanitizer = inject(DomSanitizer);
+  private messageService = inject(MessageService);
 
   ngOnInit(): void {
     this.getInvoice();
     if (this.config.data.edition) {
       this.edition.set(true);
     }
-    console.log(this.items());
+  }
+  getProduct(branchId: string) {
+    const searchQuery = {
+      page: 1,
+      size: 1000,
+      MerchantCode: branchId
+    }
+    this.service.getProduct(searchQuery).subscribe({
+      next: (res) => {
+        if (res.Code === 200) {
+          this.products.set(res.Data.Content)
+          console.log(res.Data.Content);
+
+        }
+      }
+
+    });
   }
   getInvoice() {
     this.service.getDetailInvoice(this.config.data.id).subscribe({
@@ -89,8 +107,8 @@ export class ReportDetail implements OnInit {
             );
             return;
           }
-
           const d: IInvoiceDetail = res.Data;
+          this.getProduct(d.MerchantInvoice?.Code)
           this.invoiceForm.patchValue({
             RefId: d.RefId,
             CustomerName: d.BuyerInvoice?.BuyerFullName,
@@ -116,7 +134,7 @@ export class ReportDetail implements OnInit {
             ),
           );
 
-          this.buildSummaryTable(d);
+          this.buildSummaryTable(d.ListInvoiceItems, d.ListTaxRates);
         }
       },
       error: () => {
@@ -132,18 +150,65 @@ export class ReportDetail implements OnInit {
   }
   onChangeInvoice(event: { field: string; value: any; row: number }) {
     const { field, value, row } = event;
-
-    this.listItems.update((prev) => {
+    this.items.update((prev) => {
       const clone = [...prev];
       clone[row] = { ...clone[row], [field]: value };
       return clone;
     });
+    const taxRates = this.buildTaxRates(this.items())
+    console.log(taxRates);
 
-    console.log('Updated items:', this.items());
+    this.buildSummaryTable(this.items(), taxRates)
   }
-  submitForm() {
-    this.invoiceForm.patchValue({});
+
+  submitForm(type: 0 | 1) {
+    if (this.invoiceForm.invalid) {
+      this.invoiceForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.invoiceForm.getRawValue();
+    const products = this.items().map(item => ({
+      ItemCode: item.ItemCode ?? '',
+      ItemName: item.ItemName ?? '',
+      Quantity: item.Quantity ?? 0,
+      UnitPrice: item.UnitPrice ?? 0,
+      AmountOC: item.AmountOC ?? 0,
+      DiscountAmountOC: item.DiscountAmountOC ?? 0,
+      VatRate: item.VatRate ?? parseFloat(item.VatRateName ?? '0') / 100,
+      UnitName: item.UnitName ?? ''
+    }));
+    const payload = {
+      Type: type,
+      RefId: formValue.RefId,
+      CustomerName: formValue.CustomerName,
+      CustomerCompanyName: formValue.CustomerCompanyName,
+      CustomerTaxCode: formValue.CustomerTaxCode,
+      CustomerAddress: formValue.CustomerAddress,
+      CustomerPhone: formValue.CustomerPhone,
+      CustomerIDNumber: formValue.CustomerIDNumber,
+
+      Products: products
+
+    };
+
+    this.service.updateInvoice(payload).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Thành công!',
+        });
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Thất bại',
+          detail: Object.values(err.error.errors).join(' | '),
+        });
+      }
+    });
   }
+
 
   startEdit(field: string) {
     this.editingField.set(field);
@@ -152,37 +217,43 @@ export class ReportDetail implements OnInit {
   stopEdit() {
     this.editingField.set(null);
   }
-  private buildSummaryTable(d: IInvoiceDetail): void {
-    const items = d.ListInvoiceItems ?? [];
-    const taxRates = d.ListTaxRates ?? [];
+  private buildTaxRates(items: IInvoiceItem[]) {
+    return Object.values(
+      items.reduce((acc, item) => {
+        if (!item.VatRateName) return acc;
 
-    // 1. Không kê khai thuế GTGT (không có VatRateName)
+        const vatKey = item.VatRateName;
+
+        if (!acc[vatKey]) {
+          acc[vatKey] = {
+            VatRateName: vatKey,
+            AmountWithoutVATOC: 0,
+            VATAmountOC: 0,
+          };
+        }
+
+        acc[vatKey].AmountWithoutVATOC += item.AmountWithoutVATOC ?? 0;
+        acc[vatKey].VATAmountOC += item.VatAmountOC ?? 0;
+
+        return acc;
+      }, {} as Record<string, any>)
+    );
+  }
+
+  private buildSummaryTable(items: any[], taxRates: any[]): void {
     const unDeclareVAT = items
       .filter((i: IInvoiceItem) => !i.VatRateName || i.VatRateName === '')
       .reduce((s, i) => s + (i.AmountWithoutVATOC ?? 0), 0);
 
-    // 2. Không chịu thuế GTGT (Thuế suất 0%)
     const totalVat0 = items
       .filter((i: IInvoiceItem) => i.VatRateName === '0%')
       .reduce((s, i) => s + (i.AmountWithoutVATOC ?? 0), 0);
-
-    // 3. Tổng tiền trước thuế của các mức VAT > 0 (5%, 8%, 10%, ...)
     const taxableWithoutVAT = taxRates.reduce((s, x) => s + (x.AmountWithoutVATOC ?? 0), 0);
-
-    // 4. Tổng VAT
     const totalVAT = taxRates.reduce((s, x) => s + (x.VATAmountOC ?? 0), 0);
-
-    // 5. Tổng cộng trước thuế
     const totalWithoutVAT = unDeclareVAT + totalVat0 + taxableWithoutVAT;
-
-    // 6. Tổng cộng thanh toán (gồm VAT)
     const totalPayment = totalWithoutVAT + totalVAT;
-
-    // Cập nhật grandTotal + tiền bằng chữ theo tổng thanh toán cuối cùng
     this.grandTotal.set(totalPayment);
     this.totalInWords.set(totalPayment);
-
-    // 7. Build data cho bảng summary
     const rows = [
       {
         title: 'Không kê khai thuế GTGT:',

@@ -66,6 +66,9 @@ export class ReportList {
   searchQuery = signal<IInvoiceQuery>({
     page: 1,
     size: 10,
+    status
+      :
+      4
   });
 
   private reportService = inject(ReportService);

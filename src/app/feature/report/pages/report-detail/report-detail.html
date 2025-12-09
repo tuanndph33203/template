@@ -11,7 +11,7 @@
       ></iframe>
     </div>
   } @else {
-    <div class="h-full flex flex-col">
+    <form [formGroup]="invoiceForm" class="h-full flex flex-col">
       <div class="overflow-y-auto p-4 bg-slate-50">
         <div class="w-full bg-white p-6 text-xs leading-relaxed border border-blue-300">
           <div class="grid grid-cols-[1fr_3fr_1fr]">
@@ -33,10 +33,8 @@
           </div>
           <div class="border-b my-4"></div>
           @if (edition()) {
-            <form
-              [formGroup]="invoiceForm"
+            <div
               class="grid grid-cols-[auto_1fr_30px] grid-rows-[30px_30px_30px_30px] gap-x-3 w-2/3 items-center"
-              (ngSubmit)="submitForm()"
             >
               <label class="whitespace-nowrap" for="CustomerCompanyName">Tên đơn vị:</label>
               <div>
@@ -118,10 +116,11 @@
               <button pTooltip="Chỉnh sửa" (click)="startEdit('CustomerPhone')">
                 <i class="pi pi-pen-to-square" style="font-size: 0.8rem"></i>
               </button>
-            </form>
+            </div>
             <div class="mt-4">
               <app-table-report-detail
                 [invoiceItems]="items()"
+                [productItems]="products()"
                 (changed)="onChangeInvoice($event)"
               />
             </div>
@@ -162,12 +161,27 @@
       </div>
       @if (edition()) {
         <div class="py-2 flex justify-center items-center gap-5 border-t">
-          <p-button label="Lưu" icon="pi pi-save" aria-label="Save" size="small" severity="info" />
-          <p-button label="Phát Hành" icon="pi pi-save" aria-label="Save" size="small" />
+          <p-button
+            label="Lưu"
+            icon="pi pi-save"
+            aria-label="Save"
+            size="small"
+            severity="info"
+            [disabled]="invoiceForm.invalid || loading()"
+            (onClick)="submitForm(0)"
+          />
+          <p-button
+            label="Phát Hành"
+            icon="pi pi-save"
+            aria-label="Save"
+            size="small"
+            [disabled]="invoiceForm.invalid || loading()"
+            (onClick)="submitForm(1)"
+          />
 
-          <p-button label="Quay lại" size="small" severity="contrast" />
+          <p-button label="Đóng" size="small" severity="contrast" />
         </div>
       }
-    </div>
+    </form>
   }
 }

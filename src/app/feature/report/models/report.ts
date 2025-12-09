@@ -81,6 +81,7 @@ export interface IInvoiceItem {
   AmountWithoutVATOC?: number;
   AmountWithoutVAT?: number;
   VatRateName?: string;
+  VatRate?: number;
   VatAmountOC?: number;
   VatAmount?: number;
 }

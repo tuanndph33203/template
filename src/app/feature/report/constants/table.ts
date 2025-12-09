@@ -143,7 +143,7 @@ export const colsTempSummary: ITableConfig[] = [
   {
     label: 'Thành tiền trước thuế GTGT',
     field: 'AmountWithoutVATOC',
-    type: 'text',
+    type: 'currency',
     align: 'right',
   },
 

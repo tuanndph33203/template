@@ -1,18 +1,4 @@
 :host ::ng-deep {
-  .p-datatable {
-    position: relative;
-    .p-datatable-tbody {
-      tr > td {
-        height: 41px;
-        padding: 6px;
-        white-space: nowrap;
-      }
-    }
-    .p-datatable-thead > tr > th {
-      min-height: 41px;
-      padding: 6px;
-    }
-  }
   input {
     font-size: 12px;
     width: 100%;
@@ -21,5 +7,13 @@
     outline: none;
     border: none;
     border-radius: 0;
+  }
+}
+table {
+  tr {
+    th,
+    td {
+      height: 43px;
+    }
   }
 }

@@ -33,4 +33,12 @@ export class ReportService {
   downloadInvoices(refIds: string[]): Observable<any> {
     return this.http.post('/invoice/download-invoice', refIds);
   }
+
+  updateInvoice(body: any): Observable<any> {
+    return this.http.post('/invoice/update-invoice', body);
+  }
+
+  getProduct(params: any): Observable<any> {
+    return this.http.post('/product/getby-filter', params);
+  }
 }
