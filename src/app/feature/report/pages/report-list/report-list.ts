@@ -11,7 +11,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import { InvoiceStatusOptions, ProcessTypeOptions, TransactionTypesOptions } from '../../constants/report';
+import {
+  InvoiceStatusOptions,
+  ProcessTypeOptions,
+  TransactionTypesOptions,
+} from '../../constants/report';
 import { IInvoice, IInvoiceQuery } from '../../models/report';
 import { ReportService } from '../../services/report';
 import { ReportDetail } from '../report-detail/report-detail';
@@ -122,10 +126,9 @@ export class ReportList {
         width: '850px',
         height: '100vh',
         data: {
-          id: data.row.RefId
+          id: data.row.RefId,
         },
         closable: true,
-
       });
     }
     if (data.action.type === 'edit') {
@@ -135,17 +138,17 @@ export class ReportList {
         height: '100vh',
         data: {
           id: data.row.RefId,
-          edition: true
+          edition: true,
         },
         closable: true,
       });
     }
     if (data.action.type === 'publish') {
-      this.hanlePublish(data)
+      this.hanlePublish(data);
     }
 
     if (data.action.type === 'download') {
-      this.hanleDownload(data)
+      this.hanleDownload(data);
     }
   }
   hanlePublish(data: { action: ITableAction; row: IInvoice }) {
@@ -155,6 +158,10 @@ export class ReportList {
       .subscribe({
         next: (res) => {
           if (res.Code === 200) {
+            this.messageService.add({
+              severity: 'info',
+              summary: res.Message,
+            });
           } else {
             this.messageService.clear();
             this.messageService.add({

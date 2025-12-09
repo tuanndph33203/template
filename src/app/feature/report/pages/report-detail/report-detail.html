@@ -32,87 +32,99 @@
             </div>
           </div>
           <div class="border-b my-4"></div>
-          <form
-            [formGroup]="invoiceForm"
-            class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2 w-2/3 items-center"
-            onsubmit="submitForm()"
-          >
-            <label class="whitespace-nowrap">Tên đơn vị:</label>
-            <div>
-              @if (editingField() !== 'CustomerCompanyName') {
-                <p (dblclick)="startEdit('CustomerCompanyName')">
-                  {{ detail()?.BuyerInvoice?.BuyerLegalName }}
-                </p>
-              } @else {
-                <input
-                  formControlName="CustomerCompanyName"
-                  class="h-[30px] w-full"
-                  (blur)="stopEdit()"
-                  (keydown.enter)="stopEdit()"
-                  autofocus
-                />
-              }
-            </div>
-
-            <label>MST/CCCD người mua:</label>
-            <div>
-              @if (editingField() !== 'CustomerTaxCode') {
-                <p (dblclick)="startEdit('CustomerTaxCode')">
-                  {{ detail()?.BuyerInvoice?.BuyerIdNumber }}
-                </p>
-              } @else {
-                <input
-                  formControlName="CustomerTaxCode"
-                  class="h-[30px] w-full"
-                  (blur)="stopEdit()"
-                  (keydown.enter)="stopEdit()"
-                  autofocus
-                />
-              }
-            </div>
-            <label>Địa chỉ:</label>
-            <div>
-              @if (editingField() !== 'CustomerAddress') {
-                <p (dblclick)="startEdit('CustomerAddress')">
-                  {{ detail()?.BuyerInvoice?.BuyerAddress }}
-                </p>
-              } @else {
-                <input
-                  formControlName="CustomerAddress"
-                  class="h-[30px] w-full"
-                  (blur)="stopEdit()"
-                  (keydown.enter)="stopEdit()"
-                  autofocus
-                />
-              }
-            </div>
-
-            <label>Điện thoại:</label>
-            <div>
-              @if (editingField() !== 'CustomerPhone') {
-                <p (dblclick)="startEdit('CustomerPhone')">
-                  {{ detail()?.BuyerInvoice?.BuyerPhoneNumber }}
-                </p>
-              } @else {
-                <input
-                  formControlName="CustomerPhone"
-                  class="h-[30px] w-full"
-                  (blur)="stopEdit()"
-                  (keydown.enter)="stopEdit()"
-                  autofocus
-                />
-              }
-            </div>
-          </form>
-
-          <div class="mt-4">
-            <app-table-meta
-              [dataTable]="items()"
-              [columns]="colsTemp()"
-              (actionChangeInput)="onChangeInvoice($event)"
-            />
-          </div>
           @if (edition()) {
+            <form
+              [formGroup]="invoiceForm"
+              class="grid grid-cols-[auto_1fr_30px] grid-rows-[30px_30px_30px_30px] gap-x-3 w-2/3 items-center"
+              (ngSubmit)="submitForm()"
+            >
+              <label class="whitespace-nowrap" for="CustomerCompanyName">Tên đơn vị:</label>
+              <div>
+                @if (editingField() !== 'CustomerCompanyName') {
+                  <p (dblclick)="startEdit('CustomerCompanyName')">
+                    {{ invoiceForm.get('CustomerCompanyName')?.value }}
+                  </p>
+                } @else {
+                  <input
+                    id="CustomerCompanyName"
+                    formControlName="CustomerCompanyName"
+                    class="w-full h-[30px] bg-blue-100 px-1 focus:outline-none border-b border-b-black"
+                    (blur)="stopEdit()"
+                    (keydown.enter)="stopEdit()"
+                    autofocus
+                  />
+                }
+              </div>
+              <button pTooltip="Chỉnh sửa" (click)="startEdit('CustomerCompanyName')">
+                <i class="pi pi-pen-to-square" style="font-size: 0.8rem"></i>
+              </button>
+              <label for="CustomerTaxCode">MST/CCCD người mua:</label>
+              <div>
+                @if (editingField() !== 'CustomerTaxCode') {
+                  <p (dblclick)="startEdit('CustomerTaxCode')">
+                    {{ invoiceForm.get('CustomerTaxCode')?.value }}
+                  </p>
+                } @else {
+                  <input
+                    id="CustomerTaxCode"
+                    formControlName="CustomerTaxCode"
+                    class="w-full h-[30px] bg-blue-100 px-1 focus:outline-none border-b border-b-black"
+                    (blur)="stopEdit()"
+                    (keydown.enter)="stopEdit()"
+                    autofocus
+                  />
+                }
+              </div>
+              <button pTooltip="Chỉnh sửa" (click)="startEdit('CustomerTaxCode')">
+                <i class="pi pi-pen-to-square" style="font-size: 0.8rem"></i>
+              </button>
+              <label for="CustomerAddress">Địa chỉ:</label>
+              <div>
+                @if (editingField() !== 'CustomerAddress') {
+                  <p (dblclick)="startEdit('CustomerAddress')">
+                    {{ invoiceForm.get('CustomerAddress')?.value }}
+                  </p>
+                } @else {
+                  <input
+                    id="CustomerAddress"
+                    formControlName="CustomerAddress"
+                    class="w-full h-[30px] bg-blue-100 px-1 focus:outline-none border-b border-b-black"
+                    (blur)="stopEdit()"
+                    (keydown.enter)="stopEdit()"
+                    autofocus
+                  />
+                }
+              </div>
+              <button pTooltip="Chỉnh sửa" (click)="startEdit('CustomerAddress')">
+                <i class="pi pi-pen-to-square" style="font-size: 0.8rem"></i>
+              </button>
+              <label for="CustomerPhone">Điện thoại:</label>
+              <div>
+                @if (editingField() !== 'CustomerPhone') {
+                  <p (dblclick)="startEdit('CustomerPhone')">
+                    {{ invoiceForm.get('CustomerPhone')?.value }}
+                  </p>
+                } @else {
+                  <input
+                    id="CustomerPhone"
+                    formControlName="CustomerPhone"
+                    class="w-full h-[30px] bg-blue-100 px-1 focus:outline-none border-b border-b-black"
+                    (blur)="stopEdit()"
+                    (keydown.enter)="stopEdit()"
+                    autofocus
+                  />
+                }
+              </div>
+              <button pTooltip="Chỉnh sửa" (click)="startEdit('CustomerPhone')">
+                <i class="pi pi-pen-to-square" style="font-size: 0.8rem"></i>
+              </button>
+            </form>
+            <div class="mt-4">
+              <app-table-report-detail
+                [invoiceItems]="items()"
+                (changed)="onChangeInvoice($event)"
+              />
+            </div>
             <button
               severity="contrast"
               type="button"
@@ -123,6 +135,22 @@
             >
               <i class="pi pi-plus" style="font-size: 12px"></i>
             </button>
+          } @else {
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <p>Tên đơn vị: {{ detail()?.BuyerInvoice?.BuyerLegalName }}</p>
+                <p>MST/CCCD người mua: {{ detail()?.BuyerInvoice?.BuyerIdNumber }}</p>
+                <p>Địa chỉ: {{ detail()?.BuyerInvoice?.BuyerAddress }}</p>
+                <p>Điện thoại: {{ detail()?.BuyerInvoice?.BuyerPhoneNumber }}</p>
+              </div>
+            </div>
+            <div class="mt-4">
+              <app-table-meta
+                [dataTable]="items()"
+                [columns]="colsTemp"
+                (actionChangeInput)="onChangeInvoice($event)"
+              />
+            </div>
           }
 
           <app-table-meta [dataTable]="summaryTableData()" [columns]="colsTempSummary" />
@@ -134,7 +162,9 @@
       </div>
       @if (edition()) {
         <div class="py-2 flex justify-center items-center gap-5 border-t">
-          <p-button label="Lưu" icon="pi pi-save" aria-label="Save" size="small" />
+          <p-button label="Lưu" icon="pi pi-save" aria-label="Save" size="small" severity="info" />
+          <p-button label="Phát Hành" icon="pi pi-save" aria-label="Save" size="small" />
+
           <p-button label="Quay lại" size="small" severity="contrast" />
         </div>
       }

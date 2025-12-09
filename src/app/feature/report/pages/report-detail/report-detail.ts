@@ -9,10 +9,11 @@ import { ReportService } from '../../services/report';
 import { NumberToVietnamesePipe } from '@app/shared/pipes/number-to-vietnamese-pipe';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { IInvoiceDetail, IInvoiceItem } from '../../models/report';
-import { colsTempDetail, colsTempEdit, colsTempSummary } from '../../constants/table';
+import { colsTempDetail, colsTempSummary } from '../../constants/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { Loading } from '@app/shared/ui/loading/loading';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TableReportDetail } from '../../components/table-report-detail/table-report-detail';
 
 @Component({
   selector: 'app-report-detail',
@@ -26,17 +27,19 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } fr
     TooltipModule,
     Loading,
     ReactiveFormsModule,
+    TableReportDetail,
   ],
   templateUrl: './report-detail.html',
   styleUrl: './report-detail.scss',
 })
 export class ReportDetail implements OnInit {
   colsTempSummary: ITableConfig[] = colsTempSummary;
-  colsTemp = signal<ITableConfig[]>([]);
+  colsTemp = colsTempDetail;
 
   loading = signal(true);
   detail = signal<IInvoiceDetail | null>(null);
   items = signal<IInvoiceItem[]>([]);
+
   totalDiscount = signal(0);
   grandTotal = signal(0);
   totalInWords = signal(0);
@@ -72,10 +75,8 @@ export class ReportDetail implements OnInit {
     this.getInvoice();
     if (this.config.data.edition) {
       this.edition.set(true);
-      this.colsTemp.set(colsTempEdit);
-    } else {
-      this.colsTemp.set(colsTempDetail);
     }
+    console.log(this.items());
   }
   getInvoice() {
     this.service.getDetailInvoice(this.config.data.id).subscribe({
@@ -91,14 +92,13 @@ export class ReportDetail implements OnInit {
 
           const d: IInvoiceDetail = res.Data;
           this.invoiceForm.patchValue({
-            Type: 1,
             RefId: d.RefId,
-            CustomerName: d.BuyerInvoice.BuyerFullName,
-            CustomerCompanyName: d.BuyerInvoice.BuyerLegalName,
-            CustomerTaxCode: d.BuyerInvoice.BuyerTaxCode,
-            CustomerAddress: d.BuyerInvoice.BuyerAddress,
-            CustomerPhone: d.BuyerInvoice.BuyerPhoneNumber,
-            CustomerIDNumber: d.BuyerInvoice.BuyerIdNumber,
+            CustomerName: d.BuyerInvoice?.BuyerFullName,
+            CustomerCompanyName: d.BuyerInvoice?.BuyerLegalName,
+            CustomerTaxCode: d.BuyerInvoice?.BuyerTaxCode,
+            CustomerAddress: d.BuyerInvoice?.BuyerAddress,
+            CustomerPhone: d.BuyerInvoice?.BuyerPhoneNumber,
+            CustomerIDNumber: d.BuyerInvoice?.BuyerIdNumber,
           });
           this.detail.set(d);
 
