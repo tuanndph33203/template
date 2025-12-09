@@ -39,13 +39,13 @@
         {{ rowIndex + 1 }}
       </td>
       <td
-        class="border !p-0"
+        class="border !p-0 cursor-pointer"
         [style]="{ minWidth: '130px', maxWidth: '170px', width: '170px' }"
-        (dblclick)="startEdit(rowIndex, 'ItemName')"
+        (click)="startEdit(rowIndex, 'ItemName')"
         [ngClass]="isEditing(rowIndex, 'ItemName') ? '!p-0' : ''"
       >
         @if (!isEditing(rowIndex, 'ItemName')) {
-          <span class="px-[1px] line-clamp-2" [pTooltip]="item.ItemName">
+          <span class="px-[1px] line-clamp-2 underline" [pTooltip]="item.ItemName">
             {{ item.ItemName }}
           </span>
         } @else {
@@ -64,16 +64,20 @@
         class="border px-2 text-center"
         [style]="{ minWidth: '40px', maxWidth: '60px', width: '60px' }"
       >
-        {{ item.UnitName }}
+        <span class="">
+          {{ item.UnitName }}
+        </span>
       </td>
       <td
-        class="border px-2 text-right"
-        (dblclick)="startEdit(rowIndex, 'Quantity')"
+        class="border px-2 text-right cursor-pointer"
+        (click)="startEdit(rowIndex, 'Quantity')"
         [ngClass]="isEditing(rowIndex, 'Quantity') ? '!p-0' : ''"
         [style]="{ minWidth: '40px', maxWidth: '80px', width: '80px' }"
       >
         @if (!isEditing(rowIndex, 'Quantity')) {
-          {{ item.Quantity }}
+          <span class="underline">
+            {{ item.Quantity }}
+          </span>
         } @else {
           <p-input-number
             autofocus
@@ -89,13 +93,13 @@
         class="border px-2 text-right"
         [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }"
       >
-        <span> {{ item.UnitPrice | currency: 'VND' }}</span>
+        <span class=""> {{ item.UnitPrice | currency: 'VND' }}</span>
       </td>
       <td
         class="border px-2 text-right"
         [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }"
       >
-        <span>
+        <span class="">
           {{ item.AmountWithoutVATOC | currency: 'VND' }}
         </span>
       </td>
@@ -104,13 +108,13 @@
         class="border px-2 text-right"
         [style]="{ minWidth: '70px', maxWidth: '120px', width: '120px' }"
       >
-        <span> {{ item.VatRateName }}</span>
+        <span class=""> {{ item.VatRateName }}</span>
       </td>
       <td
         class="border px-2 text-right"
         [style]="{ minWidth: '120px', maxWidth: '140px', width: '140px' }"
       >
-        <span>
+        <span class="">
           {{ item.VatAmountOC | currency: 'VND' }}
         </span>
       </td>

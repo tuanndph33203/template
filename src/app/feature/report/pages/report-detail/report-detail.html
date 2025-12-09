@@ -123,6 +123,9 @@
                 [productItems]="products()"
                 (changed)="onChangeInvoice($event)"
               />
+              @if (invoiceForm.get('ItemCode')?.errors || invoiceForm.get('Quantity')?.errors) {
+                <small class="text-red-500"> Dữ liệu không hợp lệ, vui lòng kiểm tra lại' </small>
+              }
             </div>
             <button
               severity="contrast"
@@ -167,7 +170,6 @@
             aria-label="Save"
             size="small"
             severity="info"
-            [disabled]="invoiceForm.invalid || loading()"
             (onClick)="submitForm(0)"
           />
           <p-button
@@ -178,8 +180,6 @@
             [disabled]="invoiceForm.invalid || loading()"
             (onClick)="submitForm(1)"
           />
-
-          <p-button label="Đóng" size="small" severity="contrast" />
         </div>
       }
     </form>

@@ -66,9 +66,6 @@ export class ReportList {
   searchQuery = signal<IInvoiceQuery>({
     page: 1,
     size: 10,
-    status
-      :
-      4
   });
 
   private reportService = inject(ReportService);
@@ -135,7 +132,7 @@ export class ReportList {
       });
     }
     if (data.action.type === 'edit') {
-      this.ref = this.dialogService.open(ReportDetail, {
+      this.dialogService.open(ReportDetail, {
         header: 'Chỉnh sửa hóa đơn',
         width: '850px',
         height: '100vh',
@@ -144,6 +141,10 @@ export class ReportList {
           edition: true,
         },
         closable: true,
+      })?.onClose.subscribe((ok) => {
+        if (ok) {
+          this.search(this.searchQuery());
+        }
       });
     }
     if (data.action.type === 'publish') {
