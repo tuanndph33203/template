@@ -9,10 +9,12 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        data: { title: 'Đăng nhập' },
         loadComponent: () => import('./feature/auth/pages/login/login').then((c) => c.Login),
       },
       {
         path: 'login-callback',
+        data: { title: 'Callback' },
         loadComponent: () =>
           import('./feature/auth/pages/login-callback/login-callback').then((c) => c.LoginCallback),
       },
@@ -22,14 +24,23 @@ export const routes: Routes = [
     path: 'dashboard',
     component: SiteLayout,
     canActivateChild: [authGuard],
+
     children: [
       {
         path: '',
+        data: { title: 'Bán hàng' },
+        loadComponent: () =>
+          import('./feature/sales/pages/sales-list/sales-list').then((c) => c.SalesList),
+      },
+      {
+        path: 'invoice',
+        data: { title: 'Hóa đơn' },
         loadComponent: () =>
           import('./feature/report/pages/report-list/report-list').then((c) => c.ReportList),
       },
       {
         path: 'employee',
+        data: { title: 'Nhân viên' },
         loadComponent: () =>
           import('./feature/employee/pages/employee-list/employee-list').then(
             (c) => c.EmployeeList,
@@ -37,14 +48,17 @@ export const routes: Routes = [
       },
       {
         path: 'product',
+        data: { title: 'Sản phẩm' },
         loadComponent: () =>
           import('./feature/product/pages/product-list/product-list').then((c) => c.ProductList),
       },
       {
         path: 'branch',
+        data: { title: 'Chi nhánh' },
         loadComponent: () =>
           import('./feature/branch/pages/branch-list/branch-list').then((c) => c.BranchList),
       },
+
     ],
   },
   {

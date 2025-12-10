@@ -14,30 +14,40 @@ export class Sidebar {
   isSidebarCollapsed = false;
   menuItems: any[] = [
     {
-      icon: 'pi pi-receipt',
-      label: 'Hóa đơn',
+      icon: 'pi pi-shop',
+      label: 'Bán hàng',
       isOpen: false,
       link: '/dashboard',
     },
     {
-      icon: 'pi pi-objects-column',
-      label: 'Sản Phẩm',
+      icon: 'pi pi-receipt',
+      label: 'Hóa đơn',
       isOpen: false,
+      link: '/dashboard/invoice',
+    },
+    {
+      icon: 'pi pi-wrench',
+      label: 'Hệ thống',
+      isOpen: true,
       children: [
-        { label: 'Danh sách', link: '/dashboard/product' },
-        { label: 'Thêm mới', link: '/dashboard/product/add' },
+        {
+          icon: 'pi pi-objects-column',
+          label: 'Sản Phẩm',
+          link: '/dashboard/product'
+        },
+        // {
+        //   icon: 'pi pi-user',
+        //   label: 'Nhân Viên',
+        //   link: '/dashboard/employee',
+        // },
+        {
+          icon: 'pi pi-shop',
+          label: 'Chi nhánh',
+          link: '/dashboard/branch',
+        },
       ],
     },
-    {
-      icon: 'pi pi-user',
-      label: 'Nhân Viên',
-      link: '/dashboard/employee',
-    },
-    {
-      icon: 'pi pi-shop',
-      label: 'Chi nhánh',
-      link: '/dashboard/employee',
-    },
+
   ];
   router = inject(Router);
   onSidebarToggle() {

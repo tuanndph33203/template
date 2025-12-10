@@ -58,7 +58,7 @@
     [loading]="showLoading()"
     stripedRows
     showGridlines
-    class="bg-white"
+    styleClass="min-h-96 relative"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -147,9 +147,11 @@
                       editingCell()?.field === item.field
                     ) || !item.edition
                   ) {
-                    <span [ngClass]="item.lineClamp ? 'line-clamp-' + item.lineClamp : ''">{{
-                      data[item.field] | truncate: item.truncate
-                    }}</span>
+                    <span
+                      class="line-clamp"
+                      [ngClass]="item.lineClamp ? 'line-clamp-' + item.lineClamp : ''"
+                      >{{ data[item.field] | truncate: item.truncate }}</span
+                    >
                   }
 
                   @if (
@@ -175,9 +177,10 @@
                     maxWidth: item.maxWidth,
                     width: item.width,
                   }"
+                  class="bg-white flex justify-center"
                 >
                   <img
-                    [ngSrc]="data[item.field]"
+                    [ngSrc]="data[item.field] ?? 'no-img.jpg'"
                     width="56"
                     height="56"
                     class="aspect-square object-cover object-center rounded"
@@ -381,12 +384,7 @@
     @if (showNodata()) {
       <ng-template pTemplate="emptymessage">
         <div class="h-96"></div>
-        <div
-          class="absolute top-1/2 right-1/2 translate-x-1/2 flex flex-col items-center justify-center text-gray-400 gap-2 text-lg"
-        >
-          <i class="pi pi-database text-xl" style="font-size: 2rem"></i>
-          Không có dữ liệu !
-        </div>
+        <app-no-data />
       </ng-template>
     }
   </p-table>

@@ -1,5 +1,5 @@
 <div class="h-[55px] flex justify-between items-center pl-4 bg-white border-b">
-  <div><h1 class="text-2xl font-semibold">Báo cáo chứng từ hóa đơn</h1></div>
+  <div><p-breadcrumb [home]="home" [model]="items()" /></div>
   <div class="hidden lg:block">
     <div class="flex gap-4">
       <p-button (click)="op.toggle($event)" icon="pi pi-user" label="Tài khoản" size="large" />

@@ -1,0 +1,56 @@
+@if (loading()) {
+  <app-loading />
+}
+
+@if (product()) {
+  <div class="max-w-4xl mx-auto p-6 bg-white grid grid-cols-2 gap-6">
+    <div class="flex justify-center">
+      <img
+        [ngSrc]="product()!.UrlImage || 'no-img.jpg'"
+        width="300"
+        height="300"
+        class="rounded-lg border object-cover"
+      />
+    </div>
+    <div class="space-y-3">
+      <h1 class="text-xl font-bold text-gray-800">
+        {{ product()!.Name }}
+      </h1>
+
+      <p class="text-sm text-gray-500">
+        Mã sản phẩm: <span class="font-semibold">{{ product()!.Code }}</span>
+      </p>
+      <div class="flex gap-1">
+        <span class="text-gray-500">Trạng thái:</span>
+        <b [class.text-red-500]="product()!.IsDelete" [class.text-green-600]="!product()!.IsDelete">
+          {{ product()!.IsDelete ? 'Ngừng bán' : 'Đang kinh doanh' }}
+        </b>
+      </div>
+      <div class="grid grid-cols-2 gap-3 text-sm">
+        <div class="flex gap-1">
+          <span class="text-gray-500">Đơn vị:</span>
+          <b>{{ product()!.UnitName }}</b>
+        </div>
+
+        <div class="flex gap-1">
+          <span class="text-gray-500">Thời gian:</span>
+          <b>{{ product()!.TimeUsed }} phút</b>
+        </div>
+
+        <div class="flex gap-1">
+          <span class="text-gray-500">VAT:</span>
+          <b>{{ product()!.VatRate }}%</b>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t">
+        <p class="text-gray-500 text-sm">Giá bán :</p>
+        <p class="text-2xl font-bold">{{ product()!.Price | number }} đ</p>
+      </div>
+    </div>
+  </div>
+}
+
+@if (!product() && !loading()) {
+  <app-no-data />
+}

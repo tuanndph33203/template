@@ -1,0 +1,184 @@
+<div class="grid grid-cols-2 gap-5 overflow-hidden">
+  <div class="p-4 bg-gray-50 rounded-md">
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <h2 class="font-semibold text-lg">Chào mừng, {{ user()?.firstName }}</h2>
+        <p class="text-xs text-gray-500">{{ today | date: 'MMM dd, yyyy' }}</p>
+      </div>
+
+      <form [formGroup]="formSearch" class="grid grid-cols-2 gap-4 py-2">
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="TextFilter"
+            type="text"
+            class="w-full h-[35px]"
+            formControlName="TextFilter"
+          />
+          <label for="TextFilter" class="!font-normal text-sm">Nhập tên sản phẩm</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select
+            [options]="branchOptions()"
+            optionLabel="Notes"
+            optionValue="Code"
+            class="w-full h-[35px]"
+            formControlName="MerchantCode"
+            filter="true"
+          />
+          <label for="MerchantCode" class="!font-normal text-sm">Chọn chi nhánh</label>
+        </p-floatlabel>
+      </form>
+    </div>
+
+    <p-virtualscroller
+      [items]="products()"
+      [itemSize]="118"
+      scrollHeight="calc(100vh - 180px)"
+      styleClass="border border-surface rounded"
+      class="w-full"
+      [lazy]="true"
+      [step]="searchQuery().size"
+      (onLazyLoad)="onScroll($event)"
+    >
+      <ng-template pTemplate="item" let-item let-options>
+        <div class="p-2">
+          <div
+            class="border rounded bg-white flex justify-between items-center w-full cursor-pointer hover:shadow-md transition px-2"
+            (click)="addToCart(item)"
+          >
+            <div class="flex items-center gap-3">
+              <div class="flex justify-center">
+                <img
+                  class="rounded w-full object-cover"
+                  [src]="item.UrlImage || 'no-img.jpg'"
+                  [alt]="item.Name"
+                  style="max-width: 100px"
+                />
+              </div>
+
+              <div class="pt-2 flex flex-col gap-2">
+                <span class="text-gray-500 text-xs">
+                  {{ item.Code }}
+                </span>
+
+                <div class="text-sm font-medium leading-tight line-clamp-2">
+                  {{ item.Name }}
+                </div>
+
+                <span class="text-base font-semibold text-blue-600">
+                  {{ item.Price | currency: 'VND' }}
+                </span>
+              </div>
+            </div>
+            <button
+              pButton
+              icon="pi pi-plus"
+              label="Thêm"
+              size="small"
+              severity="contrast"
+              (click)="addToCart(item); $event.stopPropagation()"
+            ></button>
+          </div>
+        </div>
+      </ng-template>
+    </p-virtualscroller>
+  </div>
+  <div class="p-4 bg-white border-l rounded-md">
+    <h3 class="font-semibold text-lg mb-2">Đơn hàng</h3>
+    <div class="space-y-3 border-t pt-4 max-h-[420px] overflow-auto">
+      @for (item of cart(); track item.Id) {
+        <div
+          class="grid grid-cols-[1fr_150px_150px_50px] items-center justify-between bg-gray-50 p-2 rounded"
+        >
+          <div class="flex flex-col">
+            <span class="font-medium text-sm">{{ item.Name }}</span>
+            <span class="text-xs text-gray-500">
+              {{ item.Price | currency: 'VND' }}
+            </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              pButton
+              icon="pi pi-minus"
+              size="small"
+              severity="secondary"
+              (click)="decreaseQty(item.Id)"
+            ></button>
+            <span class="min-w-[24px] text-center font-semibold">
+              {{ item.qty }}
+            </span>
+            <button
+              pButton
+              icon="pi pi-plus"
+              size="small"
+              severity="secondary"
+              (click)="increaseQty(item.Id)"
+            ></button>
+          </div>
+
+          <div class="font-semibold text-sm text-left min-w-[110px]">
+            {{ item.Price * item.qty | currency: 'VND' }}
+          </div>
+          <button
+            pButton
+            icon="pi pi-trash"
+            size="small"
+            severity="danger"
+            (click)="removeFromCart(item.Id)"
+          ></button>
+        </div>
+      }
+
+      @if (!cart().length) {
+        <div class="text-center text-gray-400 text-sm py-6 italic">Chưa có sản phẩm trong giỏ</div>
+      }
+    </div>
+
+    <div class="text-sm space-y-2 border-t pt-4 mt-4">
+      <div class="flex justify-between">
+        <span>Tổng phụ</span>
+        <b>{{ subTotal() | currency: 'VND' }}</b>
+      </div>
+
+      <div class="flex justify-between">
+        <span>Thuế</span>
+        <b>{{ totalVat() | currency: 'VND' }}</b>
+      </div>
+
+      <div class="flex justify-between text-red-500">
+        <span>Discount</span>
+        <b> {{ discountValue() | currency: 'VND' }}</b>
+      </div>
+
+      <div class="flex justify-between text-lg font-bold pt-2 border-t">
+        <span>Tổng tiền</span>
+        <span>{{ grandTotal() | currency: 'VND' }}</span>
+      </div>
+    </div>
+
+    <h4 class="font-medium mt-6 mb-2">Hình thức thanh toán</h4>
+
+    <div class="flex gap-5 mb-4">
+      <p-button
+        icon="pi pi-money-bill"
+        label="Tiền mặt"
+        severity="secondary"
+        size="small"
+      ></p-button>
+      <p-button icon="pi pi-credit-card" label="Thẻ" severity="secondary" size="small"></p-button>
+      <p-button
+        icon="pi pi-building-columns"
+        label="Chuyển khoản"
+        severity="secondary"
+        size="small"
+      ></p-button>
+    </div>
+
+    <div class="flex justify-end">
+      <button pButton>
+        Thanh toán <span>{{ grandTotal() | currency: 'VND' }}</span>
+      </button>
+    </div>
+  </div>
+</div>

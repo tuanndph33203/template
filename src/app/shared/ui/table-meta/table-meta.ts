@@ -13,6 +13,7 @@ import { Menu } from 'primeng/menu';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InputNumber, InputNumberInputEvent } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { NoData } from '../no-data/no-data';
 @Component({
   selector: 'app-table-meta',
   imports: [
@@ -29,7 +30,8 @@ import { InputTextModule } from 'primeng/inputtext';
     Menu,
     ScrollingModule,
     InputNumber,
-    InputTextModule
+    InputTextModule,
+    NoData
   ],
   templateUrl: './table-meta.html',
   styleUrl: './table-meta.scss',

@@ -1,1 +1,12 @@
-<p>branch-list works!</p>
+<div class="bg-white/80 space-y-4 rounded-md p-4">
+  <div class="h-full text-sm">
+    <app-table-meta
+      [dataTable]="branch()"
+      [columns]="colsTemp() ?? []"
+      [scrollHeight]="`${41 * 17 + 54}px`"
+      [showNodata]="true"
+      [showColumnToggle]="true"
+      [showLoading]="loading()"
+    />
+  </div>
+</div>

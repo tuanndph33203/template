@@ -1,1 +1,50 @@
-<p>product-list works!</p>
+<div class="bg-white/80 space-y-4 rounded-md px-4 pt-1">
+  <form [formGroup]="formSearch" class="grid grid-cols-2 gap-4 py-2">
+    <p-floatlabel variant="on">
+      <input
+        pInputText
+        id="TextFilter"
+        type="text"
+        class="w-full h-[35px]"
+        formControlName="TextFilter"
+      />
+      <label for="TextFilter" class="!font-normal text-sm">Nhập tên sản phẩm</label>
+    </p-floatlabel>
+    <p-floatlabel variant="on">
+      <p-select
+        [options]="branchOptions()"
+        optionLabel="Notes"
+        optionValue="Code"
+        class="w-full h-[35px]"
+        formControlName="MerchantCode"
+        filter="true"
+      />
+      <label for="MerchantCode" class="!font-normal text-sm">Chọn chi nhánh</label>
+    </p-floatlabel>
+  </form>
+  <div class="h-full text-sm">
+    <app-table-meta
+      [dataTable]="products()"
+      [columns]="colsTemp() ?? []"
+      [scrollHeight]="`${41 * 15 + 54}px`"
+      [currentPage]="searchQuery().page"
+      [pageSize]="searchQuery().size"
+      [showNodata]="true"
+      [showColumnToggle]="true"
+      [showTotalRecord]="true"
+      [showLoading]="loading()"
+      [showRefresh]="true"
+      [totalData]="total()"
+      (actionRefresh)="search(searchQuery())"
+      (actionClick)="handleAction($event)"
+    />
+    <div class="flex items-center justify-center">
+      <p-paginator
+        (onPageChange)="onPageChange($event)"
+        [first]="(searchQuery().page - 1) * searchQuery().size"
+        [rows]="searchQuery().size"
+        [totalRecords]="total()"
+      />
+    </div>
+  </div>
+</div>
