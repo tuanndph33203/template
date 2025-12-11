@@ -49,7 +49,7 @@
               pTooltip="{{ isSidebarCollapsed ? item.label : '' }}"
               tooltipPosition="right"
               [ngClass]="{
-                'bg-blue-100 text-blue-600': item.isOpen,
+                'bg-blue-100 text-blue-600': item.link === activeLink(),
                 'justify-center': isSidebarCollapsed,
               }"
               (click)="onMenuClick(item)"

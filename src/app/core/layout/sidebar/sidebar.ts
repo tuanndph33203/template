@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { Tooltip } from 'primeng/tooltip';
@@ -12,6 +12,7 @@ import { Tooltip } from 'primeng/tooltip';
 })
 export class Sidebar {
   isSidebarCollapsed = false;
+  activeLink = signal('');
   menuItems: any[] = [
     {
       icon: 'pi pi-shop',
@@ -28,12 +29,12 @@ export class Sidebar {
     {
       icon: 'pi pi-wrench',
       label: 'Hệ thống',
-      isOpen: true,
+      isOpen: false,
       children: [
         {
           icon: 'pi pi-objects-column',
           label: 'Sản Phẩm',
-          link: '/dashboard/product'
+          link: '/dashboard/product',
         },
         // {
         //   icon: 'pi pi-user',
@@ -47,9 +48,15 @@ export class Sidebar {
         },
       ],
     },
-
   ];
   router = inject(Router);
+  constructor() {
+    this.activeLink.set(this.router.url);
+
+    this.router.events.subscribe(() => {
+      this.activeLink.set(this.router.url);
+    });
+  }
   onSidebarToggle() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
