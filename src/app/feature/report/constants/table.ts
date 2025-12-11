@@ -87,7 +87,8 @@ export const colsTempList: ITableConfig[] = [
         icon: 'pi pi-file-edit',
         tooltipLabel: 'Chỉnh sửa',
         type: 'edit',
-        visible: (v) => v.Status === InvoiceStatus.AccountantProcess || v.Status === InvoiceStatus.ExportError,
+        visible: (v) =>
+          v.Status === InvoiceStatus.AccountantProcess || v.Status === InvoiceStatus.ExportError,
       },
     ],
   },
@@ -111,11 +112,11 @@ export const colsTempDetail: ITableConfig[] = [
   { label: 'Số lượng', field: 'Quantity', type: 'text', align: 'right', minWidth: '40px' },
 
   {
-    label: 'Đơn giá trước chiết khấu',
+    label: 'Đơn giá',
     field: 'UnitPrice',
     type: 'currency',
     align: 'right',
-    minWidth: '120px',
+    minWidth: '90px',
   },
 
   {
@@ -123,17 +124,17 @@ export const colsTempDetail: ITableConfig[] = [
     field: 'AmountWithoutVATOC',
     type: 'currency',
     align: 'right',
-    minWidth: '120px',
+    minWidth: '100px',
   },
 
-  { label: 'Thuế suất GTGT', field: 'VatRateName', type: 'text', minWidth: '70px' },
+  { label: 'Thuế suất GTGT', field: 'VatRateName', type: 'text', minWidth: '80px' },
 
   {
     label: 'Tiền thuế GTGT',
     field: 'VatAmountOC',
     type: 'currency',
     align: 'right',
-    minWidth: '120px',
+    minWidth: '100px',
   },
 ];
 
