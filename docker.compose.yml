@@ -1,0 +1,28 @@
+services:
+    image: ndungkma07/logs-api:1.0.0
+    container_name: logs-service
+    restart: always
+    networks:
+      - api-app-net
+    ports:
+      - "1026:1026"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ASPNETCORE_URLS: "http://+:1026"
+      RedisConfiguration__Enabled: "true"
+      RedisConfiguration__ConnectionString: "10.8.101.211:6379"
+      ConnectionString__IsTesting: "NO"
+      ConnectionString__DbType: "SqlServerDatabase"
+      ConnectionString__PostgreSQLDatabase: ""
+      ConnectionString__SqlServerDatabase: "Server=10.8.101.2,1433;Database=pro_ma_logs;User Id=srv-admin;Password=Trananh@2025;Encrypt=False;TrustServerCertificate=True"
+  invoice-fe:
+    image: trananh2024/invoice-fe-web:production
+    container_name: invoice-fe
+    restart: always
+    ports:
+      - "8081:80"
+    networks:
+      - api-app-net
+networks:
+  api-app-net:
+    driver: bridge

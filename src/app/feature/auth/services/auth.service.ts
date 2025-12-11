@@ -20,6 +20,6 @@ export class AuthService {
   }
 
   redirectMicrosoft() {
-    window.location.href = `${this.authUrl}/authentication/login-microsoft?clientKey=B3394396-4970-4459-812C-3AFFFA51C7E0`;
+    window.location.href = `${this.authUrl}/authentication/login-microsoft?clientKey=`;
   }
 }
