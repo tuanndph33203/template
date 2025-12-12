@@ -60,9 +60,11 @@
     styleClass="w-full"
   >
     <ng-template pTemplate="header">
-      <tr>
+      <tr
+        class="bg-white dark:bg-[rgb(39,39,42)] text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-600"
+      >
         @if (showCheckboxToggle()) {
-          <th>
+          <th class="dark:text-slate-200">
             <p-checkbox
               [binary]="true"
               [ngModel]="allSelected"
@@ -70,21 +72,30 @@
             ></p-checkbox>
           </th>
         }
+
         @for (item of columns(); track $index) {
           @if (!item.visible) {
+            <!-- Cột bình thường -->
             @if (item.type !== 'action') {
-              <th [style]="{ minWidth: item.minWidth, maxWidth: item.maxWidth, width: item.width }">
+              <th
+                class="dark:!bg-stone-800 dark:text-slate-200"
+                [style]="{ minWidth: item.minWidth, maxWidth: item.maxWidth, width: item.width }"
+              >
                 {{ item.label }}
               </th>
+
+              <!-- Cột action -->
             } @else {
               <th
                 pFrozenColumn
                 [alignFrozen]="'right'"
                 [frozen]="actionFrozen()"
-                class="!px-4"
-                [ngClass]="{ 'font-bold': actionFrozen() }"
+                class="!px-4 dark:!bg-stone-800 dark:text-slate-200 dark:border-slate-600 transition-colors"
+                [ngClass]="{
+                  'font-bold': actionFrozen(),
+                  '!bg-blue-100 dark:!bg-slate-700': actionFrozen(),
+                }"
                 [style]="{ minWidth: item.minWidth, maxWidth: item.maxWidth, width: item.width }"
-                [ngClass]="actionFrozen() ? '!bg-blue-100' : ''"
               >
                 {{ item.label }}
               </th>
@@ -93,6 +104,7 @@
         }
       </tr>
     </ng-template>
+
     <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
       <tr>
         @if (showCheckboxToggle()) {

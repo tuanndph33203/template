@@ -1,9 +1,9 @@
-<div class="relative flex min-h-screen">
+<div class="relative flex min-h-screen dark:bg-[rgb(39,39,42)]">
   <aside
-    class="relative inset-y-0 left-0 z-40 bg-white transition-all duration-300 ease-in-out overflow-hidden border-r"
+    class="relative inset-y-0 left-0 z-40 bg-white dark:bg-[rgb(39,39,42)] transition-all duration-300 ease-in-out overflow-hidden border-r dark:border-slate-700"
     [ngClass]="isSidebarCollapsed ? 'w-[60px]' : 'w-[250px]'"
   >
-    <div class="h-[55px] flex justify-between border-b">
+    <div class="h-[55px] flex justify-between border-b dark:border-slate-700">
       <div class="flex items-center gap-2 px-2">
         @if (isSidebarCollapsed) {
           <img
@@ -17,7 +17,7 @@
             <img src="logo.png" alt="logo" class="w-[40px] h-[30px] aspect-square shrink-0" />
           </div>
           <h2
-            class="font-bold text-lg whitespace-nowrap transition-all duration-300 origin-left"
+            class="font-bold text-lg whitespace-nowrap text-slate-800 dark:text-slate-100 transition-all duration-300 origin-left"
             [ngClass]="
               isSidebarCollapsed
                 ? 'opacity-0 scale-95 -translate-x-2 pointer-events-none'
@@ -33,7 +33,7 @@
         type="button"
         (click)="onSidebarToggle()"
         [ngClass]="isSidebarCollapsed ? 'hidden' : 'block'"
-        class="p-2"
+        class="p-2 text-slate-700 dark:text-slate-200"
       >
         <i class="pi pi-angle-double-left text-lg"></i>
       </button>
@@ -45,18 +45,21 @@
           <li class="relative">
             <button
               type="button"
-              class="flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-300 hover:bg-blue-50 text-slate-700 w-full text-left"
+              class="flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-300 w-full text-left text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700"
               pTooltip="{{ isSidebarCollapsed ? item.label : '' }}"
               tooltipPosition="right"
               [ngClass]="{
-                'bg-blue-100 text-blue-600': item.link === activeLink(),
+                'bg-blue-100 text-blue-600 dark:bg-slate-700 dark:text-slate-200':
+                  item.link === activeLink(),
                 'justify-center': isSidebarCollapsed,
               }"
               (click)="onMenuClick(item)"
             >
-              <i [class]="item.icon" class="shrink-0 text-lg text-slate-700"></i>
+              <i [class]="item.icon" class="shrink-0 text-lg text-slate-700 dark:text-slate-200">
+              </i>
+
               <span
-                class="font-medium whitespace-nowrap transition-all duration-300 overflow-hidden"
+                class="font-medium whitespace-nowrap transition-all duration-300 overflow-hidden text-slate-700 dark:text-slate-200"
                 [ngClass]="
                   isSidebarCollapsed
                     ? 'w-0 max-w-0 opacity-0 ml-0 pointer-events-none'
@@ -65,9 +68,10 @@
               >
                 {{ item.label }}
               </span>
+
               @if (item.children && !isSidebarCollapsed) {
                 <i
-                  class="pi pi-chevron-down text-xs transition-all duration-300 shrink-0"
+                  class="pi pi-chevron-down text-xs transition-all duration-300 shrink-0 text-slate-600 dark:text-slate-300"
                   style="font-size: 0.8rem"
                   [ngClass]="{
                     'rotate-180': item.isOpen,
@@ -77,9 +81,10 @@
                 ></i>
               }
             </button>
+
             @if (item.children && item.isOpen) {
               <ul
-                class="mt-1 ml-6 space-y-1 border-l pl-3 transition-all duration-300"
+                class="mt-1 ml-6 space-y-1 border-l pl-3 transition-all duration-300 border-slate-300 dark:border-slate-600"
                 [ngClass]="
                   isSidebarCollapsed
                     ? 'opacity-0 max-h-0 overflow-hidden'
@@ -90,10 +95,14 @@
                   <li>
                     <a
                       [routerLink]="child.link"
-                      routerLinkActive="bg-blue-100 text-blue-600"
-                      class="flex items-center gap-3 px-3 py-2 text-sm rounded-md text-slate-600 hover:bg-blue-50 hover:text-blue-600 cursor-pointer"
+                      routerLinkActive="bg-blue-100 text-blue-600 
+                                        dark:bg-slate-700 dark:text-slate-200"
+                      class="flex items-center gap-3 px-3 py-2 text-sm rounded-md text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer"
                     >
-                      <i [class]="child.icon" class="shrink-0 text-lg text-slate-700"></i>
+                      <i
+                        [class]="child.icon"
+                        class="shrink-0 text-lg text-slate-700 dark:text-slate-200"
+                      ></i>
                       <span>{{ child.label }}</span>
                     </a>
                   </li>

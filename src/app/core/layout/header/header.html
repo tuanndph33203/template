@@ -7,10 +7,10 @@
 
   <div class="hidden lg:block">
     <div class="flex gap-4">
-      <!-- <div class="flex justify-center items-center">
+      <div class="flex justify-center items-center">
         <button
           type="button"
-          class="text-slate-600 bg-[rgb(39,39,42)] dark:!bg-slate-200 px-2 py-1 rounded-full"
+          class="text-slate-100 dark:text-slate-600 bg-[rgb(39,39,42)] dark:!bg-slate-200 px-2 py-1 rounded-full"
           (click)="toggleDarkMode()"
         >
           <i
@@ -19,7 +19,7 @@
             [class.pi-sun]="!layoutService.isDarkTheme()"
           ></i>
         </button>
-      </div> -->
+      </div>
       <p-button
         (click)="op.toggle($event)"
         icon="pi pi-user"

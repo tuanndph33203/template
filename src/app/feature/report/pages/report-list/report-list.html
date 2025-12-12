@@ -1,7 +1,11 @@
 <div class="h-full space-y-4">
-  <div class="bg-white px-4 py-2 rounded-md">
+  <!-- Block Lưu ý -->
+  <div
+    class="bg-white dark:bg-[rgb(39,39,42)] px-4 py-2 rounded-md text-slate-800 dark:text-slate-200 border border-transparent dark:border-slate-700"
+  >
     <h3 class="font-bold underline mb-1">Lưu ý:</h3>
-    <ul class="list-decimal px-4 text-xs space-y-1">
+
+    <ul class="list-decimal px-4 text-xs space-y-1 text-slate-700 dark:text-slate-300">
       <li>
         Kế toán click phát hành hóa đơn ngày nào --> Hóa đơn sẽ được phát hành theo ngày hiện tại
         (có thể không phải ngày chứng từ).
@@ -20,66 +24,110 @@
       </li>
     </ul>
   </div>
-  <div class="table-warp bg-white/80 px-4 pt-1 rounded-md">
+
+  <!-- Block Form + Table -->
+  <div
+    class="table-warp bg-white/80 dark:bg-[rgb(39,39,42)] px-4 pt-1 rounded-md text-slate-800 dark:text-slate-200 border border-transparent dark:border-slate-700"
+  >
     <form [formGroup]="formSearch" class="grid grid-cols-4 2xl:grid-cols-6 gap-4 py-2">
       <p-floatlabel variant="on">
         <input
           pInputText
           id="customerTax"
           type="text"
-          class="w-full h-[35px]"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200"
           formControlName="customerTax"
         />
-        <label for="customerTax" class="!font-normal text-sm">Nhập mã số thuế</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input pInputText type="text" class="w-full h-[35px]" formControlName="customerName" />
-        <label for="customerName" class="!font-normal text-sm">Nhập tên khách hàng</label>
+        <label class="!font-normal text-sm">Nhập mã số thuế</label>
       </p-floatlabel>
 
       <p-floatlabel variant="on">
-        <input pInputText type="text" class="w-full h-[35px]" formControlName="customerPhone" />
-        <label for="customerPhone" class="!font-normal text-sm">Nhập số điện thoại</label>
+        <input
+          pInputText
+          type="text"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200"
+          formControlName="customerName"
+        />
+        <label class="!font-normal text-sm">Nhập tên khách hàng</label>
       </p-floatlabel>
 
       <p-floatlabel variant="on">
-        <input pInputText type="text" class="w-full h-[35px]" formControlName="invNo" />
-        <label for="invNo" class="!font-normal text-sm">Nhập số hóa đơn</label>
+        <input
+          pInputText
+          type="text"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200"
+          formControlName="customerPhone"
+        />
+        <label class="!font-normal text-sm">Nhập số điện thoại</label>
       </p-floatlabel>
 
       <p-floatlabel variant="on">
-        <input pInputText type="text" class="w-full h-[35px]" formControlName="documentNumber" />
-        <label for="documentNumber" class="!font-normal text-sm">Nhập chứng từ</label>
+        <input
+          pInputText
+          type="text"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200"
+          formControlName="invNo"
+        />
+        <label class="!font-normal text-sm">Nhập số hóa đơn</label>
       </p-floatlabel>
 
       <p-floatlabel variant="on">
-        <input pInputText type="text" class="w-full h-[35px]" formControlName="note" />
-        <label for="note" class="!font-normal text-sm">Nhập mô tả</label>
+        <input
+          pInputText
+          type="text"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200"
+          formControlName="documentNumber"
+        />
+        <label class="!font-normal text-sm">Nhập chứng từ</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          type="text"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200"
+          formControlName="note"
+        />
+        <label class="!font-normal text-sm">Nhập mô tả</label>
       </p-floatlabel>
 
       <div class="grid grid-cols-[1fr_10px_1fr] items-center gap-1">
         <p-floatlabel variant="on">
-          <p-datepicker class="!p-0 h-[35px]" formControlName="startDate" showClear="true" />
-          <label for="startDate" class="!font-normal text-sm">Từ ngày</label>
+          <p-datepicker
+            class="!p-0 h-[35px] dark:bg-slate-800 dark:text-slate-200"
+            formControlName="startDate"
+            showClear="true"
+          />
+          <label class="!font-normal text-sm">Từ ngày</label>
         </p-floatlabel>
-        <i class="pi pi-arrow-right" style="font-size: 0.5rem"></i>
+
+        <i
+          class="pi pi-arrow-right text-slate-500 dark:text-slate-300"
+          style="font-size: 0.5rem"
+        ></i>
+
         <p-floatlabel variant="on">
-          <p-datepicker class="!p-0 h-[35px]" formControlName="endDate" showClear="true" />
-          <label for="endDate" class="!font-normal text-sm">Đến ngày</label>
+          <p-datepicker
+            class="!p-0 h-[35px] dark:bg-slate-800 dark:text-slate-200"
+            formControlName="endDate"
+            showClear="true"
+          />
+          <label class="!font-normal text-sm">Đến ngày</label>
         </p-floatlabel>
       </div>
 
+      <!-- Các p-select -->
       <p-floatlabel variant="on">
         <p-select
           [options]="branchOptions()"
           optionLabel="Notes"
           optionValue="Id"
-          class="w-full h-[35px]"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200 dark:border-slate-600"
           formControlName="merchantId"
           showClear="true"
           filter="true"
         />
-        <label for="merchantId" class="!font-normal text-sm">Chọn chi nhánh</label>
+        <label class="!font-normal text-sm">Chọn chi nhánh</label>
       </p-floatlabel>
 
       <p-floatlabel variant="on">
@@ -87,13 +135,12 @@
           [options]="statusOptions"
           optionLabel="label"
           optionValue="value"
-          class="w-full h-[35px]"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200 dark:border-slate-600"
           formControlName="status"
           showClear="true"
-          clearicon=""
           filter="true"
         />
-        <label for="status" class="!font-normal text-sm">Chọn trạng thái</label>
+        <label class="!font-normal text-sm">Chọn trạng thái</label>
       </p-floatlabel>
 
       <p-floatlabel variant="on">
@@ -101,12 +148,12 @@
           [options]="paymentTypeOptions"
           optionLabel="label"
           optionValue="value"
-          class="w-full h-[35px]"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200 dark:border-slate-600"
           formControlName="paymentType"
           showClear="true"
           filter="true"
         />
-        <label for="paymentType" class="!font-normal text-sm">Chọn loại giao dịch</label>
+        <label class="!font-normal text-sm">Chọn loại giao dịch</label>
       </p-floatlabel>
 
       <p-floatlabel variant="on">
@@ -114,14 +161,16 @@
           [options]="processTypeOptions"
           optionLabel="label"
           optionValue="value"
-          class="w-full h-[35px]"
+          class="w-full h-[35px] dark:bg-slate-800 dark:text-slate-200 dark:border-slate-600"
           formControlName="requestType"
           showClear="true"
           filter="true"
         />
-        <label for="requestType" class="!font-normal text-sm">Chọn loại yêu cầu</label>
+        <label class="!font-normal text-sm">Chọn loại yêu cầu</label>
       </p-floatlabel>
     </form>
+
+    <!-- Table -->
     <div class="h-full text-sm">
       <app-table-meta
         [dataTable]="data()"
@@ -140,8 +189,10 @@
         (actionClick)="handleAction($event)"
         (actionLazyload)="onScroll($event)"
       />
+
       <div class="flex items-center justify-center">
         <p-paginator
+          class="dark:text-slate-200 dark:bg-[rgb(39,39,42)]"
           (onPageChange)="onPageChange($event)"
           [first]="(searchQuery().page - 1) * searchQuery().size"
           [rows]="searchQuery().size"
