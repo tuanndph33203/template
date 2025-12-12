@@ -2,12 +2,20 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'numberToVietnamese',
-  standalone: true
+  standalone: true,
 })
 export class NumberToVietnamesePipe implements PipeTransform {
   private readonly numberText = [
-    'không', 'một', 'hai', 'ba', 'bốn',
-    'năm', 'sáu', 'bảy', 'tám', 'chín'
+    'không',
+    'một',
+    'hai',
+    'ba',
+    'bốn',
+    'năm',
+    'sáu',
+    'bảy',
+    'tám',
+    'chín',
   ];
 
   private readonly units = ['', 'nghìn', 'triệu', 'tỷ', 'nghìn tỷ', 'triệu tỷ'];
@@ -25,6 +33,8 @@ export class NumberToVietnamesePipe implements PipeTransform {
 
     if (ten > 1) {
       result += ' ' + this.numberText[ten] + ' mươi';
+      console.log(unit); //0.5  5
+
       if (unit === 1) result += ' mốt';
       else if (unit === 5) result += ' lăm';
       else if (unit > 0) result += ' ' + this.numberText[unit];
@@ -44,7 +54,7 @@ export class NumberToVietnamesePipe implements PipeTransform {
 
   transform(value: number | string | null | undefined): string {
     if (value == null) return '';
-    let num = Number(value);
+    let num = Math.floor(Number(value));
     if (isNaN(num) || num < 0) return '';
 
     if (num === 0) return 'Không';

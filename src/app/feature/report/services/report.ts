@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BaseHttpService } from '@app/core/services/base-http.service';
+import { BaseHttpService } from '@app/core/services/base-http';
 import { ApiResponse, ApiResponseDetail } from '@app/core/models/common';
 import { Observable } from 'rxjs';
 import { IInvoice, IInvoiceDetail } from '../models/report';

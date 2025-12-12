@@ -8,6 +8,7 @@ export class AuthService {
   private authStore = inject(AuthStore);
   private httpClient = inject(HttpClient);
   private authUrl = environment.authencationUrl;
+  private authKey = environment.microsoftClientKey;
 
   loginBySectionId(sessionId: string): Observable<any> {
     return this.httpClient
@@ -20,6 +21,6 @@ export class AuthService {
   }
 
   redirectMicrosoft() {
-    window.location.href = `${this.authUrl}/authentication/login-microsoft?clientKey=`;
+    window.location.href = `${this.authUrl}/authentication/login-microsoft?clientKey=${this.authKey}`;
   }
 }

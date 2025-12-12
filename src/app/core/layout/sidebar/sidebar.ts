@@ -14,17 +14,17 @@ export class Sidebar {
   isSidebarCollapsed = false;
   activeLink = signal('');
   menuItems: any[] = [
-    {
-      icon: 'pi pi-shop',
-      label: 'Bán hàng',
-      isOpen: false,
-      link: '/dashboard',
-    },
+    // {
+    //   icon: 'pi pi-shop',
+    //   label: 'Bán hàng',
+    //   isOpen: false,
+    //   link: '/dashboard',
+    // },
     {
       icon: 'pi pi-receipt',
       label: 'Hóa đơn',
       isOpen: false,
-      link: '/dashboard/invoice',
+      link: '/dashboard',
     },
     {
       icon: 'pi pi-wrench',

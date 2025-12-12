@@ -14,6 +14,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InputNumber, InputNumberInputEvent } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { NoData } from '../no-data/no-data';
+import { Loading } from '../loading/loading';
 @Component({
   selector: 'app-table-meta',
   imports: [
@@ -31,7 +32,8 @@ import { NoData } from '../no-data/no-data';
     ScrollingModule,
     InputNumber,
     InputTextModule,
-    NoData
+    NoData,
+    Loading,
   ],
   templateUrl: './table-meta.html',
   styleUrl: './table-meta.scss',
@@ -40,7 +42,7 @@ export class TableMeta implements OnInit {
   dataTable = input.required<any[]>();
   columns = input.required<ITableConfig[]>();
 
-  scrollHeight = input<string>('600px');
+  scrollHeight = input<number>(600);
   rowHeight = input<number>(41);
   totalData = input<number>(0);
   currentPage = input<number>(1);
@@ -58,7 +60,7 @@ export class TableMeta implements OnInit {
 
   actionClick = output<ITableActionEvent>();
   actionLazyload = output<any>();
-  actionChangeInput = output<{ value: string | number, field: string, row: number }>();
+  actionChangeInput = output<{ value: string | number; field: string; row: number }>();
   actionRefresh = output();
   actionFrozen = signal<boolean>(false);
   formModelColumn: any = {};
@@ -134,25 +136,22 @@ export class TableMeta implements OnInit {
     this.actionRefresh.emit();
   }
 
-
   startEdit(rowIndex: number, field: string) {
-    this.editingCell.set({ rowIndex, field })
+    this.editingCell.set({ rowIndex, field });
   }
 
   stopEdit() {
-    this.editingCell.set(null)
+    this.editingCell.set(null);
   }
 
   onTextChange(event: Event, field: string, row: number): void {
     const value = (event.target as HTMLInputElement).value;
-    this.actionChangeInput.emit({ field, value, row })
-
+    this.actionChangeInput.emit({ field, value, row });
   }
 
   onNumberChange(event: InputNumberInputEvent, field: string, row: number): void {
     const value = event.value ?? '';
-    this.actionChangeInput.emit({ field, value, row })
-
+    this.actionChangeInput.emit({ field, value, row });
   }
 
   toggleMenu(event: MouseEvent, popover: any) {

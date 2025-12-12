@@ -8,36 +8,40 @@ import { Breadcrumb } from 'primeng/breadcrumb';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { filter } from 'rxjs';
+import { LayoutService } from '@app/core/services/layout';
 
 @Component({
   selector: 'app-header',
-  imports: [Popover, Button, ButtonDirective, Breadcrumb, RouterModule],
+  imports: [Popover, Button, Breadcrumb, RouterModule, ButtonDirective],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
 export class Header implements OnInit {
   user = signal<IUser | null>(null);
   home: MenuItem = { icon: 'pi pi-home', routerLink: '/dashboard' };
-  items = signal<MenuItem[]>([]);
+  items = signal<MenuItem[]>([{ label: 'Hóa đơn' }]);
 
   auth = inject(AuthStore);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  layoutService = inject(LayoutService);
 
   ngOnInit(): void {
     this.user.set(this.auth.getUser());
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe(() => {
-        const crumbs = this.buildBreadcrumb(this.route.root);
-        this.items.set(crumbs);
-      });
+    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(() => {
+      const crumbs = this.buildBreadcrumb(this.route.root);
+      this.items.set(crumbs);
+    });
+  }
+
+  toggleDarkMode() {
+    this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
   }
 
   buildBreadcrumb(
     route: ActivatedRoute,
     url: string = '',
-    breadcrumbs: MenuItem[] = []
+    breadcrumbs: MenuItem[] = [],
   ): MenuItem[] {
     const children: ActivatedRoute[] = route.children;
 
@@ -46,7 +50,7 @@ export class Header implements OnInit {
     }
 
     for (const child of children) {
-      const routeURL = child.snapshot.url.map(seg => seg.path).join('/');
+      const routeURL = child.snapshot.url.map((seg) => seg.path).join('/');
       if (routeURL) {
         url += `/${routeURL}`;
       }
@@ -63,7 +67,6 @@ export class Header implements OnInit {
 
     return breadcrumbs;
   }
-
 
   logout() {
     this.auth.setAuth(null);

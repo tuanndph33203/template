@@ -54,8 +54,7 @@
     [value]="dataTable()"
     [virtualScroll]="virtualScroll()"
     [virtualScrollItemSize]="rowHeight()"
-    [scrollHeight]="scrollHeight()"
-    [loading]="showLoading()"
+    [scrollHeight]="`${scrollHeight()}px`"
     stripedRows
     showGridlines
     styleClass="w-full"
@@ -115,8 +114,8 @@
                     minWidth: item.minWidth,
                     maxWidth: item.maxWidth,
                     width: item.width,
+                    textAlign: item.align || 'left',
                   }"
-                  [ngClass]="item.align ? '!text-' + item.align : '!text-left'"
                 >
                   <span>{{ getIndex(rowIndex) }}</span>
                 </td>
@@ -127,10 +126,10 @@
                     minWidth: item.minWidth,
                     maxWidth: item.maxWidth,
                     width: item.width,
+                    textAlign: item.align || 'left',
                   }"
                   pTooltip="{{ item.tooltip && data[item.tooltipField ?? ''] }}"
                   [ngClass]="[
-                    item.align ? '!text-' + item.align : '!text-left',
                     item.edition &&
                     editingCell()?.rowIndex === rowIndex &&
                     editingCell()?.field === item.field
@@ -176,6 +175,7 @@
                     minWidth: item.minWidth,
                     maxWidth: item.maxWidth,
                     width: item.width,
+                    textAlign: item.align || 'left',
                   }"
                   class="bg-white flex justify-center"
                 >
@@ -196,6 +196,7 @@
                     minWidth: item.minWidth,
                     maxWidth: item.maxWidth,
                     width: item.width,
+                    textAlign: item.align || 'left',
                   }"
                 >
                   {{ item.transformFn ? item.transformFn(data[item.field]) : data[item.field] }}
@@ -207,10 +208,10 @@
                     minWidth: item.minWidth,
                     maxWidth: item.maxWidth,
                     width: item.width,
+                    textAlign: item.align || 'left',
                   }"
                   (dblclick)="item.edition ? startEdit(rowIndex, item.field) : ''"
                   [ngClass]="[
-                    item.align ? '!text-' + item.align : '!text-left',
                     item.edition &&
                     editingCell()?.rowIndex === rowIndex &&
                     editingCell()?.field === item.field
@@ -253,8 +254,8 @@
                     minWidth: item.minWidth,
                     maxWidth: item.maxWidth,
                     width: item.width,
+                    textAlign: item.align || 'left',
                   }"
-                  [ngClass]="item.align ? '!text' + item.align : '!text-left'"
                 >
                   <span>{{ data[item.field] | date: 'dd/MM/yyyy' }}</span>
                 </td>
@@ -265,10 +266,10 @@
                     minWidth: item.minWidth,
                     maxWidth: item.maxWidth,
                     width: item.width,
+                    textAlign: item.align || 'left',
                   }"
                   (dblclick)="item.edition ? startEdit(rowIndex, item.field) : ''"
                   [ngClass]="[
-                    item.align ? '!text-' + item.align : '!text-left',
                     item.edition &&
                     editingCell()?.rowIndex === rowIndex &&
                     editingCell()?.field === item.field
@@ -371,7 +372,14 @@
                 </td>
               }
               @default {
-                <td [style]="{ minWidth: item.minWidth, maxWidth: item.maxWidth }">
+                <td
+                  [style]="{
+                    minWidth: item.minWidth,
+                    maxWidth: item.maxWidth,
+                    width: item.width,
+                    textAlign: item.align || 'left',
+                  }"
+                >
                   <span>{{ data[item.field] }}</span>
                 </td>
               }
@@ -383,8 +391,17 @@
 
     @if (showNodata()) {
       <ng-template pTemplate="emptymessage">
-        <div class="h-96"></div>
-        <app-no-data />
+        <div
+          [style]="{
+            height: scrollHeight() - 54 + 'px',
+          }"
+          class="h-96 flex items-center justify-center"
+        ></div>
+        @if (showLoading()) {
+          <app-loading />
+        } @else {
+          <app-no-data />
+        }
       </ng-template>
     }
   </p-table>

@@ -1,27 +1,46 @@
-<div class="h-[55px] flex justify-between items-center pl-4 bg-white border-b">
-  <div><p-breadcrumb [home]="home" [model]="items()" /></div>
+<div
+  class="h-[55px] flex justify-between items-center bg-white dark:bg-[rgb(39,39,42)] border-b dark:border-slate-700"
+>
+  <div>
+    <p-breadcrumb [home]="home" [model]="items()" />
+  </div>
+
   <div class="hidden lg:block">
     <div class="flex gap-4">
-      <p-button (click)="op.toggle($event)" icon="pi pi-user" label="Tài khoản" size="large" />
+      <!-- <div class="flex justify-center items-center">
+        <button
+          type="button"
+          class="text-slate-600 bg-[rgb(39,39,42)] dark:!bg-slate-200 px-2 py-1 rounded-full"
+          (click)="toggleDarkMode()"
+        >
+          <i
+            class="pi"
+            [class.pi-moon]="layoutService.isDarkTheme()"
+            [class.pi-sun]="!layoutService.isDarkTheme()"
+          ></i>
+        </button>
+      </div> -->
+      <p-button
+        (click)="op.toggle($event)"
+        icon="pi pi-user"
+        label="Tài khoản"
+        size="large"
+        styleClass="h-[55px] dark:!bg-[rgb(39,39,42)] dark:!text-slate-100 dark:!border-slate-700"
+      />
     </div>
   </div>
 </div>
-<p-popover #op>
-  <div class="flex flex-col gap-3 w-52 text-sm">
-    <div class="font-semibold text-gray-900">{{ user()?.firstName }} {{ user()?.lastName }}</div>
 
-    <div class="text-gray-600">
+<p-popover #op>
+  <div class="flex flex-col gap-3 w-52 text-sm text-gray-900 dark:text-gray-100">
+    <div class="font-semibold text-gray-900 dark:text-gray-100">
+      {{ user()?.firstName }} {{ user()?.lastName }}
+    </div>
+
+    <div class="text-gray-600 dark:text-gray-300">
       {{ user()?.email }}
     </div>
 
-    <div class="text-sm text-gray-500 italic">Vai trò: {{ user()?.role }}</div>
-
-    <button
-      pButton
-      label="Đăng xuất"
-      icon="pi pi-sign-out"
-      styleClass="p-button-danger p-button-sm mt-2"
-      (click)="logout()"
-    ></button>
+    <div class="text-sm text-gray-500 dark:text-gray-400 italic">Vai trò: {{ user()?.role }}</div>
   </div>
 </p-popover>

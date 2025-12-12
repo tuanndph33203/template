@@ -53,7 +53,7 @@ export class ReportDetail implements OnInit {
   editingField = signal<string | null>(null);
 
   invoiceForm = new FormGroup({
-    Type: new FormControl(0,),
+    Type: new FormControl(0),
     RefId: new FormControl(''),
     CustomerName: new FormControl(''),
     CustomerCompanyName: new FormControl(''),
@@ -75,21 +75,19 @@ export class ReportDetail implements OnInit {
     if (this.config.data.edition) {
       this.edition.set(true);
     }
-
   }
   getProduct(branchId: string) {
     const searchQuery = {
       page: 1,
       size: 1000,
-      MerchantCode: branchId
-    }
+      MerchantCode: branchId,
+    };
     this.service.getProduct(searchQuery).subscribe({
       next: (res) => {
         if (res.Code === 200) {
-          this.products.set(res.Data.Content)
+          this.products.set(res.Data.Content);
         }
-      }
-
+      },
     });
   }
   getInvoice() {
@@ -104,7 +102,7 @@ export class ReportDetail implements OnInit {
             return;
           }
           const d: IInvoiceDetail = res.Data;
-          this.getProduct(d.MerchantInvoice?.Code)
+          this.getProduct(d.MerchantInvoice?.Code);
           this.invoiceForm.patchValue({
             RefId: d.RefId,
             CustomerName: d.BuyerInvoice?.BuyerFullName,
@@ -113,19 +111,15 @@ export class ReportDetail implements OnInit {
             CustomerAddress: d.BuyerInvoice?.BuyerAddress,
             CustomerPhone: d.BuyerInvoice?.BuyerPhoneNumber,
             CustomerIDNumber: d.BuyerInvoice?.BuyerIdNumber,
-
           });
           this.detail.set(d);
           const fa = this.invoiceForm.get('Products') as FormArray;
           fa.clear();
           const products = this.buildProducts(d.ListInvoiceItems);
-          products.forEach(p => {
+          products.forEach((p) => {
             fa.push(this.createProductForm(p));
           });
-          const listItem = d.ListInvoiceItems.map((item) => ({
-            ...item,
-            AmountVATOC: (item.VatAmountOC ?? 0) + (item.AmountWithoutVATOC ?? 0),
-          }));
+          const listItem = d.ListInvoiceItems;
           this.items.set(listItem || []);
           this.totalDiscount.set(
             d.ListInvoiceItems.reduce(
@@ -145,7 +139,7 @@ export class ReportDetail implements OnInit {
     });
   }
   private buildProducts(items: any[]): any[] {
-    return items.map(item => ({
+    return items.map((item) => ({
       ItemCode: item.ItemCode ?? '',
       ItemName: item.ItemName ?? '',
       Quantity: item.Quantity ?? 0,
@@ -153,18 +147,14 @@ export class ReportDetail implements OnInit {
       AmountOC: item.AmountOC ?? 0,
       DiscountAmountOC: item.DiscountAmountOC ?? 0,
       VatRate: item.VatRateName === 'KCT' ? 0 : parseFloat(item.VatRateName),
-      UnitName: item.UnitName ?? ''
+      UnitName: item.UnitName ?? '',
     }));
-
   }
   private createProductForm(item: any = {}): FormGroup {
     return new FormGroup({
       ItemCode: new FormControl(item.ItemCode ?? '', Validators.required),
       ItemName: new FormControl(item.ItemName ?? ''),
-      Quantity: new FormControl(item.Quantity ?? 0, [
-        Validators.required,
-        Validators.min(1),
-      ]),
+      Quantity: new FormControl(item.Quantity ?? 0, [Validators.required, Validators.min(1)]),
       UnitPrice: new FormControl(item.UnitPrice ?? 0),
       AmountOC: new FormControl(item.AmountOC ?? 0),
       DiscountAmountOC: new FormControl(item.DiscountAmountOC ?? 0),
@@ -188,7 +178,7 @@ export class ReportDetail implements OnInit {
 
     if (rowForm) {
       rowForm.patchValue({
-        [field]: value
+        [field]: value,
       });
     } else {
       fa.push(this.createProductForm(this.items()[row]));
@@ -196,7 +186,6 @@ export class ReportDetail implements OnInit {
     const taxRates = this.buildTaxRates(this.items());
     this.buildSummaryTable(this.items(), taxRates);
   }
-
 
   submitForm(type: 0 | 1) {
     if (type === 1 && this.invoiceForm.invalid) {
@@ -223,7 +212,7 @@ export class ReportDetail implements OnInit {
         this.messageService.add({
           severity: 'info',
           summary: 'Thành công!',
-          detail: res?.Message
+          detail: res?.Message,
         });
         setTimeout(() => {
           this.dialogRef.close(true);
@@ -235,10 +224,9 @@ export class ReportDetail implements OnInit {
           summary: 'Thất bại',
           detail: Object.values(err.error.errors).join(' | '),
         });
-      }
+      },
     });
   }
-
 
   startEdit(field: string) {
     this.editingField.set(field);
@@ -249,24 +237,27 @@ export class ReportDetail implements OnInit {
   }
   private buildTaxRates(items: IInvoiceItem[]) {
     return Object.values(
-      items.reduce((acc, item) => {
-        if (!item.VatRateName) return acc;
+      items.reduce(
+        (acc, item) => {
+          if (!item.VatRateName) return acc;
 
-        const vatKey = item.VatRateName;
+          const vatKey = item.VatRateName;
 
-        if (!acc[vatKey]) {
-          acc[vatKey] = {
-            VatRateName: vatKey,
-            AmountWithoutVATOC: 0,
-            VATAmountOC: 0,
-          };
-        }
+          if (!acc[vatKey]) {
+            acc[vatKey] = {
+              VatRateName: vatKey,
+              AmountWithoutVATOC: 0,
+              VATAmountOC: 0,
+            };
+          }
 
-        acc[vatKey].AmountWithoutVATOC += item.AmountWithoutVATOC ?? 0;
-        acc[vatKey].VATAmountOC += item.VatAmountOC ?? 0;
+          acc[vatKey].AmountWithoutVATOC += item.AmountWithoutVATOC ?? 0;
+          acc[vatKey].VATAmountOC += item.VatAmountOC ?? 0;
 
-        return acc;
-      }, {} as Record<string, any>)
+          return acc;
+        },
+        {} as Record<string, any>,
+      ),
     );
   }
 
@@ -314,6 +305,4 @@ export class ReportDetail implements OnInit {
 
     this.summaryTableData.set(rows);
   }
-
-
 }

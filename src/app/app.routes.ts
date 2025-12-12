@@ -26,14 +26,14 @@ export const routes: Routes = [
     canActivateChild: [authGuard],
 
     children: [
+      // {
+      //   path: '',
+      //   data: { title: 'Bán hàng' },
+      //   loadComponent: () =>
+      //     import('./feature/sales/pages/sales-list/sales-list').then((c) => c.SalesList),
+      // },
       {
         path: '',
-        data: { title: 'Bán hàng' },
-        loadComponent: () =>
-          import('./feature/sales/pages/sales-list/sales-list').then((c) => c.SalesList),
-      },
-      {
-        path: 'invoice',
         data: { title: 'Hóa đơn' },
         loadComponent: () =>
           import('./feature/report/pages/report-list/report-list').then((c) => c.ReportList),
@@ -58,7 +58,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./feature/branch/pages/branch-list/branch-list').then((c) => c.BranchList),
       },
-
     ],
   },
   {
