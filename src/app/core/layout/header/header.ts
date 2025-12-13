@@ -12,7 +12,7 @@ import { LayoutService } from '@app/core/services/layout';
 
 @Component({
   selector: 'app-header',
-  imports: [Popover, Button, Breadcrumb, RouterModule, ButtonDirective],
+  imports: [Popover, Button, Breadcrumb, RouterModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
