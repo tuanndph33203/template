@@ -35,7 +35,7 @@ import { Branch } from '@app/feature/branch/services/branch';
 export class ProductList implements OnInit {
   formSearch = new FormGroup({
     TextFilter: new FormControl(null),
-    MerchantCode: new FormControl('17'),
+    MerchantCode: new FormControl(null),
   });
   products = signal<any[]>([]);
   total = signal<number>(0);
@@ -48,7 +48,6 @@ export class ProductList implements OnInit {
   searchQuery = signal<any>({
     page: 1,
     size: 15,
-    MerchantCode: '17',
   });
   private productService = inject(Product);
   private branchService = inject(Branch);
@@ -78,11 +77,15 @@ export class ProductList implements OnInit {
     this.branchService.getMerchant().subscribe((res) => {
       if (res.Code === 200) {
         this.branchOptions.set(res.Data);
+        this.formSearch.patchValue({ MerchantCode: this.branchOptions()[0]?.Code || '0' });
       }
     });
   }
 
   search(query: any): void {
+    if (!query.MerchantCode) {
+      return;
+    }
     const payload = this.cleanQuery(query);
     this.loading.set(true);
     this.productService

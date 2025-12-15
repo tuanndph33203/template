@@ -20,6 +20,7 @@ import { IInvoice, IInvoiceQuery } from '../../models/report';
 import { ReportService } from '../../services/report';
 import { ReportDetail } from '../report-detail/report-detail';
 import { colsTempList } from '../../constants/table';
+import dayjs from '@app/core/utils/dayjs.config';
 @Component({
   selector: 'app-report-list',
   imports: [
@@ -85,10 +86,18 @@ export class ReportList {
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
       )
       .subscribe((filters) => {
+        const normalizedFilters = {
+          ...filters,
+          startDate: this.normalizeToGMT7(filters.startDate),
+          endDate: this.normalizeToGMT7(filters.endDate),
+        };
+
+        console.log('normalizedFilters', normalizedFilters);
+
         this.searchQuery.update((q) => ({
           ...q,
           page: 1,
-          ...filters,
+          ...normalizedFilters,
         }));
       });
     this.reportService.getMerchant().subscribe((res) => {
@@ -98,10 +107,10 @@ export class ReportList {
     });
   }
   search(query: IInvoiceQuery): void {
-    const payload = this.cleanQuery(query);
+    let queryData = this.cleanQuery(query);
     this.loading.set(true);
     this.reportService
-      .searchInvoice(payload)
+      .searchInvoice(queryData)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe((res) => {
         this.total.set(res.Data?.TotalElements);
@@ -264,6 +273,13 @@ export class ReportList {
     }));
   }
 
+  normalizeToGMT7(date: string | Date | null | undefined): string | null {
+    if (!date) return null;
+    if (typeof date === 'string' && /Z|\+00:00$/.test(date)) {
+      return dayjs.utc(date).add(7, 'hour').toISOString();
+    }
+    return dayjs(date).tz('Asia/Ho_Chi_Minh').utc(true).toISOString();
+  }
   private cleanQuery<T extends Record<string, any>>(obj: T): Partial<T> {
     return Object.fromEntries(
       Object.entries(obj).filter(([_, v]) => v !== null && v !== undefined && v !== ''),

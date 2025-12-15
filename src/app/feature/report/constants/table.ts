@@ -4,7 +4,7 @@ import { InvoiceStatus, InvoiceStatusLabel } from './report';
 export const colsTempList: ITableConfig[] = [
   { label: 'STT', field: 'Index', type: 'index', minWidth: '40px', align: 'center' },
 
-  { label: 'Ngày', field: 'DocumentDate', type: 'text', minWidth: '90px' },
+  { label: 'Ngày', field: 'DocumentDate', type: 'date', minWidth: '90px' },
   { label: 'Số c.từ', field: 'DocumentNumber', type: 'text', minWidth: '130px' },
   { label: 'Chi nhánh', field: 'MerchantName', type: 'text', minWidth: '140px' },
   { label: 'Mã KH', field: 'CustomerCode', type: 'text', minWidth: '80px' },

@@ -257,7 +257,9 @@
                     textAlign: item.align || 'left',
                   }"
                 >
-                  <span>{{ data[item.field] | date: 'dd/MM/yyyy' }}</span>
+                  <span>
+                    {{ data[item.field] | date: 'dd-MM-yyyy' }}
+                  </span>
                 </td>
               }
               @case ('number') {
